@@ -1,0 +1,104 @@
+# ── Python ───────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# ── Virtual Environments ─────────────────────────────────────
+venv/
+.venv/
+env/
+ENV/
+
+# ── IDE ──────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── Jupyter ──────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ── Data (large files) ───────────────────────────────────────
+data/raw/
+data/processed/
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# ── Model Weights ────────────────────────────────────────────
+outputs/weights/*.h5
+outputs/weights/*.keras
+
+# ── Logs ─────────────────────────────────────────────────────
+logs/
+*.log
+
+# ── OS ───────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Secrets ──────────────────────────────────────────────────
+.env
+kaggle.json
+*.key
+
+# ── Streamlit ────────────────────────────────────────────────
+.streamlit/secrets.toml
+
+# ── Testing ──────────────────────────────────────────────────
+.pytest_cache/
+htmlcov/
+.coverage
+
+# ── TensorFlow / Keras ───────────────────────────────────────
+*.ckpt
+*.index
+*.data-00000-of-00001
+checkpoint
+
+# ── Model Checkpoints ────────────────────────────────────────
+outputs/checkpoints/
+outputs/tensorboard/
+outputs/history/
+outputs/cache/
+
+# ── Trained Models ───────────────────────────────────────────
+models/weights/
+best_model.keras
+best_model.h5
+*.pth
+*.pt
+*.onnx
+
+# ── Reports & Generated Files ────────────────────────────────
+reports/generated/
+reports/*.pdf
+reports/*.csv
+
+# ── Temporary Files ──────────────────────────────────────────
+temp/
+tmp/
+cache/
+*.tmp
+
+# ── Streamlit Cache ──────────────────────────────────────────
+.streamlit/cache/
+
+# ── Python Environment Files ─────────────────────────────────
+.python-version
+
+# ── Misc ─────────────────────────────────────────────────────
+*.bak
+*.orig
+*.rej
+
+data/metadata/

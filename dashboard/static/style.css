@@ -1,0 +1,240 @@
+/* =============================================================================
+   DeepFake Detection System — Custom Streamlit CSS
+   Dark-first design with glassmorphism and vibrant accents
+   ============================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;900&display=swap');
+
+/* ── Root Variables ─────────────────────────────────────────────────────────── */
+:root {
+  --primary:        #2980b9;
+  --primary-light:  #5dade2;
+  --primary-dark:   #1a5276;
+  --accent:         #e74c3c;
+  --accent-light:   #ff6b6b;
+  --success:        #2ecc71;
+  --warning:        #f39c12;
+  --bg-dark:        #0f1117;
+  --bg-card:        rgba(30, 39, 56, 0.85);
+  --bg-card-hover:  rgba(41, 128, 185, 0.12);
+  --border:         rgba(93, 173, 226, 0.2);
+  --text-primary:   #ecf0f1;
+  --text-secondary: #95a5a6;
+  --glass:          rgba(255, 255, 255, 0.03);
+  --shadow:         0 8px 32px rgba(0, 0, 0, 0.4);
+  --radius:         12px;
+  --radius-lg:      20px;
+  --font-main:      'Inter', sans-serif;
+  --font-heading:   'Outfit', sans-serif;
+  --transition:     all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Base App ────────────────────────────────────────────────────────────────── */
+.stApp {
+  background: linear-gradient(135deg, #0f1117 0%, #1a1f2e 50%, #0d1520 100%);
+  font-family: var(--font-main);
+  color: var(--text-primary);
+}
+
+/* ── Sidebar ─────────────────────────────────────────────────────────────────── */
+[data-testid="stSidebar"] {
+  background: linear-gradient(180deg, #0d1520 0%, #121929 100%) !important;
+  border-right: 1px solid var(--border) !important;
+}
+
+[data-testid="stSidebar"] .block-container {
+  padding: 1rem 0.8rem;
+}
+
+/* ── Metric Cards ────────────────────────────────────────────────────────────── */
+[data-testid="metric-container"] {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  padding: 1.2rem 1rem !important;
+  backdrop-filter: blur(10px) !important;
+  box-shadow: var(--shadow) !important;
+  transition: var(--transition) !important;
+}
+
+[data-testid="metric-container"]:hover {
+  border-color: var(--primary-light) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 12px 40px rgba(41, 128, 185, 0.25) !important;
+}
+
+[data-testid="stMetricValue"] {
+  font-family: var(--font-heading) !important;
+  font-weight: 700 !important;
+  color: var(--primary-light) !important;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────────── */
+.stButton > button {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark)) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-family: var(--font-main) !important;
+  font-weight: 600 !important;
+  font-size: 0.9rem !important;
+  padding: 0.5rem 1.5rem !important;
+  transition: var(--transition) !important;
+  letter-spacing: 0.3px !important;
+}
+
+.stButton > button:hover {
+  background: linear-gradient(135deg, var(--primary-light), var(--primary)) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 20px rgba(41, 128, 185, 0.4) !important;
+}
+
+/* ── File Uploader ───────────────────────────────────────────────────────────── */
+[data-testid="stFileUploader"] {
+  background: var(--glass) !important;
+  border: 2px dashed var(--border) !important;
+  border-radius: var(--radius) !important;
+  padding: 1rem !important;
+  transition: var(--transition) !important;
+}
+
+[data-testid="stFileUploader"]:hover {
+  border-color: var(--primary-light) !important;
+  background: var(--bg-card-hover) !important;
+}
+
+/* ── DataFrames / Tables ─────────────────────────────────────────────────────── */
+.stDataFrame {
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  overflow: hidden !important;
+}
+
+/* ── Info / Warning / Error boxes ───────────────────────────────────────────── */
+.stAlert {
+  border-radius: var(--radius) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+/* ── Progress Bar ────────────────────────────────────────────────────────────── */
+.stProgress > div > div > div {
+  background: linear-gradient(90deg, var(--primary), var(--accent-light)) !important;
+  border-radius: 4px !important;
+}
+
+/* ── Headings ────────────────────────────────────────────────────────────────── */
+h1, h2, h3 {
+  font-family: var(--font-heading) !important;
+  color: var(--text-primary) !important;
+}
+
+h1 { font-weight: 900 !important; }
+h2 { font-weight: 700 !important; }
+h3 { font-weight: 600 !important; }
+
+/* ── Custom prediction badge ─────────────────────────────────────────────────── */
+.fake-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #c0392b, #e74c3c);
+  color: white;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 2rem;
+  padding: 0.6rem 2rem;
+  border-radius: 50px;
+  text-align: center;
+  letter-spacing: 3px;
+  box-shadow: 0 4px 20px rgba(231, 76, 60, 0.5);
+  animation: pulse-red 2s infinite;
+}
+
+.real-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #1a8a4a, #2ecc71);
+  color: white;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 2rem;
+  padding: 0.6rem 2rem;
+  border-radius: 50px;
+  text-align: center;
+  letter-spacing: 3px;
+  box-shadow: 0 4px 20px rgba(46, 204, 113, 0.4);
+}
+
+@keyframes pulse-red {
+  0%, 100% { box-shadow: 0 4px 20px rgba(231, 76, 60, 0.5); }
+  50%       { box-shadow: 0 4px 40px rgba(231, 76, 60, 0.9); }
+}
+
+/* ── Glassmorphism cards ─────────────────────────────────────────────────────── */
+.glass-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  margin-bottom: 1rem;
+}
+
+.glass-card:hover {
+  border-color: var(--primary-light);
+  box-shadow: 0 12px 40px rgba(41, 128, 185, 0.2);
+}
+
+/* ── Confidence bar ──────────────────────────────────────────────────────────── */
+.confidence-bar-container {
+  background: rgba(255,255,255,0.05);
+  border-radius: 50px;
+  height: 12px;
+  overflow: hidden;
+  margin: 0.5rem 0;
+}
+
+.confidence-bar-fill-fake {
+  height: 100%;
+  background: linear-gradient(90deg, #f39c12, #e74c3c);
+  border-radius: 50px;
+  transition: width 0.8s ease;
+}
+
+.confidence-bar-fill-real {
+  height: 100%;
+  background: linear-gradient(90deg, #27ae60, #2ecc71);
+  border-radius: 50px;
+  transition: width 0.8s ease;
+}
+
+/* ── Sidebar nav items ────────────────────────────────────────────────────────── */
+.nav-item {
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  margin: 0.2rem 0;
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.nav-item:hover, .nav-item.active {
+  background: var(--bg-card-hover);
+  color: var(--primary-light);
+  border-left: 3px solid var(--primary-light);
+  padding-left: 0.85rem;
+}
+
+/* ── Select boxes ────────────────────────────────────────────────────────────── */
+.stSelectbox > div > div {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  color: var(--text-primary) !important;
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-dark); }
+::-webkit-scrollbar-thumb { background: var(--primary-dark); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }

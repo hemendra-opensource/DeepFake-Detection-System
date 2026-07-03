@@ -1,0 +1,150 @@
+# =============================================================================
+# DeepFake Detection — Central Configuration
+# =============================================================================
+
+project:
+  name: "Explainable DeepFake Detection"
+  version: "1.0.0"
+  description: "XceptionNet-based DeepFake Detection with Grad-CAM & Streamlit Dashboard"
+  author: "Final Year Project"
+
+# ── Paths ─────────────────────────────────────────────────────────────────────
+paths:
+  data_raw:       "data/raw"
+  data_processed: "data/processed"
+  metadata:       "data/metadata"
+  outputs:        "outputs"
+  weights:        "outputs/weights"
+  predictions:    "outputs/predictions"
+  heatmaps:       "outputs/heatmaps"
+  charts:         "outputs/charts"
+  reports:        "outputs/reports"
+  logs:           "logs"
+  database:       "database/detections.db"
+  assets:         "assets"
+
+# ── Dataset ───────────────────────────────────────────────────────────────────
+dataset:
+  ff_plus_plus:
+    name: "FaceForensics++"
+    kaggle_id: "xdxd003/ff-c23"
+    raw_dir: "data/raw/ff_plus_plus"
+  celeb_df:
+    name: "Celeb-DF v2"
+    kaggle_id: "reubensuju/celeb-df-v2"
+    raw_dir: "data/raw/celeb_df"
+  dfdc:
+    name: "DFDC (DeepFake Detection Challenge)"
+    kaggle_id: "c/deepfake-detection-challenge"
+    raw_dir: "data/raw/dfdc"
+
+# ── Preprocessing ────────────────────────────────────────────────────────────
+preprocessing:
+  image_size: [299, 299]          # XceptionNet native input
+  face_margin: 0.3                # 30% margin around detected face
+  min_face_confidence: 0.7
+  max_faces_per_frame: 1          # Use largest detected face
+  split_ratios:
+    train: 0.70
+    val:   0.15
+    test:  0.15
+  random_seed: 42
+  supported_image_ext: [".jpg", ".jpeg", ".png", ".bmp", ".webp"]
+  supported_video_ext: [".mp4", ".avi", ".mov", ".mkv", ".webm"]
+
+# ── Augmentation ─────────────────────────────────────────────────────────────
+augmentation:
+  enabled: true
+  horizontal_flip: true
+  brightness_limit: 0.2
+  contrast_limit: 0.2
+  rotation_limit: 10
+  noise_probability: 0.3
+  blur_probability: 0.2
+
+# ── Models ───────────────────────────────────────────────────────────────────
+models:
+  available: ["xceptionnet", "efficientnet_b0", "resnet50"]
+  default: "xceptionnet"
+  num_classes: 2
+  dropout_rate: 0.5
+  weights: "imagenet"
+  input_shape: [299, 299, 3]
+
+# ── Training ─────────────────────────────────────────────────────────────────
+training:
+  batch_size: 16
+  initial_learning_rate: 0.0001
+  min_learning_rate: 0.000001
+  max_epochs: 50
+  early_stopping_patience: 10
+  reduce_lr_patience: 5
+  reduce_lr_factor: 0.5
+  mixed_precision: false           # Disable for CPU
+  progressive:
+    phase_1:
+      datasets: ["ff_plus_plus"]
+      epochs: 20
+      freeze_base: true            # Only train classifier head
+    phase_2:
+      datasets: ["ff_plus_plus", "celeb_df"]
+      epochs: 15
+      freeze_base: false           # Unfreeze last 20 layers
+    phase_3:
+      datasets: ["ff_plus_plus", "celeb_df", "dfdc"]
+      epochs: 15
+      freeze_base: false           # Full fine-tune
+
+# ── Inference ────────────────────────────────────────────────────────────────
+inference:
+  # Decision threshold: P(FAKE) >= threshold → FAKE, else REAL
+  # Default 0.50 is the mathematically correct choice for a balanced classifier.
+  # IMPORTANT: Only override with a threshold derived from a proper ROC curve on
+  # REAL validation data (not toy/synthetic data).
+  # A threshold of 0.99 will classify images with 91% fake probability as REAL.
+  confidence_threshold: 0.5
+
+  # If true, loads threshold from outputs/weights/threshold.json when it exists
+  # and is within the valid range [0.05, 0.95].
+  # Set to false to always use confidence_threshold above (safer default).
+  use_saved_threshold: true
+
+  # If true, loads Platt calibration from outputs/weights/calibration.json.
+  # The calibration is automatically rejected if slope > 3.0 (toy-data artefact).
+  use_saved_calibration: true
+
+  video_frame_sample_rate: 5      # Analyze every 5th frame
+  temporal_window: 5              # Rolling average window
+  max_video_frames: 200           # Cap for performance
+
+
+# ── Grad-CAM ─────────────────────────────────────────────────────────────────
+gradcam:
+  target_layer_xception:      "block14_sepconv2_act"
+  target_layer_efficientnet:  "top_activation"
+  target_layer_resnet50:      "conv5_block3_out"
+  heatmap_alpha: 0.4
+  colormap: "jet"               # cv2.COLORMAP_JET
+
+# ── Dashboard ────────────────────────────────────────────────────────────────
+dashboard:
+  title: "DeepFake Detection System"
+  subtitle: "Powered by XceptionNet + Grad-CAM"
+  theme: "dark"
+  max_upload_size_mb: 200
+  supported_upload_formats: ["jpg", "jpeg", "png", "mp4", "avi", "mov"]
+
+# ── Webcam ───────────────────────────────────────────────────────────────────
+webcam:
+  camera_index: 0
+  fps_cap: 10
+  frame_width: 640
+  frame_height: 480
+
+# ── PDF Report ───────────────────────────────────────────────────────────────
+report:
+  page_size: "A4"
+  font: "Helvetica"
+  primary_color: [41, 128, 185]    # RGB
+  accent_color:  [231, 76, 60]
+  logo_path: "assets/logo.png"

@@ -1,0 +1,6 @@
+toy_dataset
+n_per_class=80
+image_size=299
+total=160
+real_dir=C:\Users\LENOVO\Desktop\DFDC\deepfake_detection\data\toy_dataset\real
+fake_dir=C:\Users\LENOVO\Desktop\DFDC\deepfake_detection\data\toy_dataset\fake

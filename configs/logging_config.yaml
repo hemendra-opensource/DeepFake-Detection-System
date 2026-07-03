@@ -1,0 +1,62 @@
+version: 1
+disable_existing_loggers: false
+
+formatters:
+  standard:
+    format: "%(asctime)s | %(levelname)-8s | %(name)s | %(funcName)s:%(lineno)d | %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+  brief:
+    format: "%(asctime)s | %(levelname)-8s | %(message)s"
+    datefmt: "%H:%M:%S"
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: brief
+    stream: ext://sys.stdout
+
+  file:
+    class: logging.handlers.RotatingFileHandler
+    level: DEBUG
+    formatter: standard
+    filename: logs/deepfake_detection.log
+    maxBytes: 10485760  # 10 MB
+    backupCount: 5
+    encoding: utf-8
+
+  error_file:
+    class: logging.handlers.RotatingFileHandler
+    level: ERROR
+    formatter: standard
+    filename: logs/errors.log
+    maxBytes: 5242880   # 5 MB
+    backupCount: 3
+    encoding: utf-8
+
+root:
+  level: DEBUG
+  handlers: [console, file, error_file]
+
+loggers:
+  preprocessing:
+    level: DEBUG
+    propagate: true
+  models:
+    level: DEBUG
+    propagate: true
+  training:
+    level: DEBUG
+    propagate: true
+  inference:
+    level: DEBUG
+    propagate: true
+  gradcam:
+    level: DEBUG
+    propagate: true
+  dashboard:
+    level: INFO
+    propagate: true
+  database:
+    level: DEBUG
+    propagate: true
