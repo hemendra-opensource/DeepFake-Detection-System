@@ -202,7 +202,7 @@ def _run_capture_and_display(
         st.image(
             annotated_rgb,
             caption=f"Camera {camera_index} — Live Frame",
-            use_container_width=True,
+            width=500,
         )
         st.markdown("</div>", unsafe_allow_html=True)
 

@@ -487,11 +487,11 @@ The following sections showcase the application's modern SaaS-grade UI. Screensh
 
 ### Home Dashboard
 
-<p align="center">
+<!-- <p align="center">
   <img src="assets/screenshots/home.png" width="960" alt="Home Dashboard"/>
-</p>
+</p> -->
 
-> Screenshot will be added. Place `assets/screenshots/home.png` to activate.
+<!-- > Screenshot will be added. Place `assets/screenshots/home.png` to activate. -->
 
 The **Home Dashboard** serves as the central hub of the application, displaying real-time KPI cards (total detections, fake rate, average confidence, reports generated), session statistics, a detection verdict timeline chart, and quick-access navigation to all modules. Designed with glassmorphism cards on a dark `#0F172A` background.
 
@@ -499,11 +499,11 @@ The **Home Dashboard** serves as the central hub of the application, displaying 
 
 ### Image Detection
 
-<p align="center">
+<!-- <p align="center">
   <img src="assets/screenshots/image_detection.png" width="960" alt="Image Detection"/>
 </p>
 
-> Screenshot will be added. Place `assets/screenshots/image_detection.png` to activate.
+> Screenshot will be added. Place `assets/screenshots/image_detection.png` to activate. -->
 
 The **Image Detection** page allows users to upload any face image. The system automatically detects and crops the face region using MediaPipe, runs XceptionNet inference, and displays the result with a styled REAL/FAKE verdict badge, an interactive Plotly confidence gauge, a real/fake probability breakdown bar, and a side-by-side Grad-CAM heatmap overlay showing exactly which facial regions triggered the prediction.
 
@@ -511,11 +511,11 @@ The **Image Detection** page allows users to upload any face image. The system a
 
 ### Video Detection
 
-<p align="center">
+<!-- <p align="center">
   <img src="assets/screenshots/video_detection.png" width="960" alt="Video Detection"/>
 </p>
 
-> Screenshot will be added. Place `assets/screenshots/video_detection.png` to activate.
+> Screenshot will be added. Place `assets/screenshots/video_detection.png` to activate. -->
 
 The **Video Detection** page processes uploaded video files frame-by-frame. Each extracted frame undergoes the full face detection → preprocessing → XceptionNet inference pipeline. Results are aggregated into an overall verdict using majority voting across frames. The page displays a frame-wise confidence timeline chart, a frame gallery with per-frame badges, an overall confidence gauge, and a detailed statistics summary.
 
@@ -523,11 +523,11 @@ The **Video Detection** page processes uploaded video files frame-by-frame. Each
 
 ### Grad-CAM Explainability
 
-<p align="center">
+<!-- <p align="center">
   <img src="assets/screenshots/gradcam.png" width="960" alt="Grad-CAM Explainability"/>
 </p>
 
-> Screenshot will be added. Place `assets/screenshots/gradcam.png` to activate.
+> Screenshot will be added. Place `assets/screenshots/gradcam.png` to activate. -->
 
 The **Grad-CAM Viewer** presents a side-by-side comparison of the original face image and the Grad-CAM heatmap overlay. Hot regions (red/yellow) highlight the exact facial features — typically blending boundaries, eye regions, or unnatural texture transitions — that the model identified as indicators of manipulation. This visual evidence provides interpretable, human-readable justification for every prediction.
 
@@ -535,11 +535,11 @@ The **Grad-CAM Viewer** presents a side-by-side comparison of the original face 
 
 ### Webcam Detection
 
-<p align="center">
+<!-- <p align="center">
   <img src="assets/screenshots/webcam.png" width="960" alt="Webcam Detection"/>
 </p>
 
-> Screenshot will be added. Place `assets/screenshots/webcam.png` to activate.
+> Screenshot will be added. Place `assets/screenshots/webcam.png` to activate. -->
 
 The **Webcam Detection** module provides live real-time DeepFake analysis directly from the user's camera. The system auto-discovers available camera indices (0, 1, 2, 3) and selects the first working device. It displays a live video feed with MediaPipe face bounding boxes, a live REAL/FAKE confidence badge overlaid on the frame, FPS counter, processing time, and handles camera resource cleanup gracefully on session end.
 
@@ -547,11 +547,11 @@ The **Webcam Detection** module provides live real-time DeepFake analysis direct
 
 ### Batch Detection
 
-<p align="center">
+<!-- <p align="center">
   <img src="assets/screenshots/batch_detection.png" width="960" alt="Batch Detection"/>
 </p>
 
-> Screenshot will be added. Place `assets/screenshots/batch_detection.png` to activate.
+> Screenshot will be added. Place `assets/screenshots/batch_detection.png` to activate. -->
 
 The **Batch Detection** page accepts multiple image and video files simultaneously and processes them in a prioritized queue. A live progress bar tracks processing status for each file. Upon completion, an aggregated results table shows filename, verdict, confidence score, and processing time for every file. The complete batch summary is exportable as a structured **CSV** and a detailed **PDF report** via one-click download.
 
@@ -559,11 +559,11 @@ The **Batch Detection** page accepts multiple image and video files simultaneous
 
 ### PDF Reports
 
-<p align="center">
+<!-- <p align="center">
   <img src="assets/screenshots/reports.png" width="960" alt="PDF Reports"/>
 </p>
 
-> Screenshot will be added. Place `assets/screenshots/reports.png` to activate.
+> Screenshot will be added. Place `assets/screenshots/reports.png` to activate. -->
 
 The **Reports** page compiles professional PDF detection reports on demand. Each report includes: detection metadata (filename, timestamp, model version), confidence charts, Grad-CAM heatmap images as visual forensic evidence, and a summary verdict. Reports are stored with paths logged in the SQLite database, making them persistently downloadable. CSV export is also available for integration with external tools.
 
@@ -571,11 +571,11 @@ The **Reports** page compiles professional PDF detection reports on demand. Each
 
 ### Detection History
 
-<p align="center">
+<!-- <p align="center">
   <img src="assets/screenshots/history.png" width="960" alt="Detection History"/>
 </p>
 
-> Screenshot will be added. Place `assets/screenshots/history.png` to activate.
+> Screenshot will be added. Place `assets/screenshots/history.png` to activate. -->
 
 The **Detection History** page presents a searchable, filterable log of every detection run by the application, persisted in an SQLite database. Users can filter by verdict (REAL/FAKE), date range, confidence threshold, and media type. Individual records can be expanded to view Grad-CAM images. The full history is exportable as a CSV, and any record can trigger a new PDF report generation.
 
@@ -583,11 +583,11 @@ The **Detection History** page presents a searchable, filterable log of every de
 
 ### Analytics Dashboard
 
-<p align="center">
+<!-- <p align="center">
   <img src="assets/screenshots/analytics.png" width="960" alt="Analytics Dashboard"/>
 </p>
 
-> Screenshot will be added. Place `assets/screenshots/analytics.png` to activate.
+> Screenshot will be added. Place `assets/screenshots/analytics.png` to activate. -->
 
 The **Analytics Dashboard** provides aggregate intelligence over the detection history. It features: a real/fake verdict donut chart, a detection volume trend line chart, a confidence score distribution histogram, top-10 detection sessions by volume, and a session summary KPI row. All charts are built with Plotly for smooth interactivity and hover tooltips.
 

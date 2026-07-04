@@ -64,7 +64,7 @@ def render(
 
     with col_img:
         st.markdown("**📷 Uploaded Image**")
-        st.image(uploaded, use_container_width=True)
+        st.image(uploaded,  width=500)
 
     with col_result:
         st.markdown("**⚙️ SaaS Inference Analysis**")
