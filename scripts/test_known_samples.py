@@ -146,9 +146,8 @@ def main() -> None:
     # ── 4. Test Videos ────────────────────────────────────────────────────────
     for actual, path in [("REAL", real_vid_path), ("FAKE", fake_vid_path)]:
         pred = video_detector.predict(path)
-        # Complementary probabilities for video level
-        real_prob = 1.0 - pred.fake_frame_ratio
-        fake_prob = pred.fake_frame_ratio
+        real_prob = pred.real_probability
+        fake_prob = pred.fake_probability
         print(
             f" {actual:<7} | {'video':<5} | {pred.label:<9} | {real_prob:>9.2%} | {fake_prob:>9.2%} | {pred.confidence:>6.1%}"
         )

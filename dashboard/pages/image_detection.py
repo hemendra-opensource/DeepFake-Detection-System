@@ -17,9 +17,11 @@ from typing import Optional
 import numpy as np
 import streamlit as st
 
+from inference.image_detector import ImageDetector, ImagePrediction
+
 
 def render(
-    image_detector: "ImageDetector",   # type: ignore[name-defined]
+    image_detector: ImageDetector,
     gradcam: Optional["GradCAM"],       # type: ignore[name-defined]
     pdf_gen: "PDFReportGenerator",      # type: ignore[name-defined]
     repo: "DetectionRepository",        # type: ignore[name-defined]
@@ -37,12 +39,12 @@ def render(
     """
     from dashboard.components.kpi_cards import render_prediction_badge, render_confidence_bar
     from dashboard.components.gradcam_viewer import render_gradcam_viewer, render_gradcam_unavailable
-    from dashboard.components.charts import confidence_histogram
+    from dashboard.components.loader import render_ai_loader
 
     st.markdown("## 🖼️ Image DeepFake Detection")
     st.markdown(
-        "<p style='color:#95a5a6;'>Upload an image to analyse. "
-        "Supported formats: JPG, JPEG, PNG</p>",
+        "<p style='color: var(--text-secondary);'>Upload an image to analyze for face manipulation. "
+        "Supported formats: JPG, JPEG, PNG, BMP, WEBP</p>",
         unsafe_allow_html=True,
     )
 
@@ -62,22 +64,28 @@ def render(
 
     with col_img:
         st.markdown("**📷 Uploaded Image**")
-        st.image(uploaded, width=500)
+        st.image(uploaded, use_container_width=True)
 
     with col_result:
-        st.markdown("**⚙️ Processing…**")
-        progress = st.progress(0, text="Loading image…")
+        st.markdown("**⚙️ SaaS Inference Analysis**")
+        
+        status_box = st.empty()
+        
+        with status_box.container():
+            render_ai_loader("Initializing face detection cascades...")
 
         try:
             image_bytes = uploaded.read()
-            progress.progress(25, text="Detecting face…")
-
+            
+            with status_box.container():
+                render_ai_loader("Analyzing facial crops with XceptionNet...")
             prediction = image_detector.predict_from_bytes(image_bytes)
-            progress.progress(70, text="Running model…")
 
             # Grad-CAM
             gradcam_result = None
             if gradcam is not None and prediction.preprocessed_face is not None:
+                with status_box.container():
+                    render_ai_loader("Extracting Grad-CAM gradient heatmaps...")
                 try:
                     gradcam_result = gradcam.explain_prediction(
                         prediction.preprocessed_face,
@@ -86,7 +94,11 @@ def render(
                     )
                 except Exception as exc:
                     st.warning(f"Grad-CAM failed: {exc}")
-            progress.progress(100, text="Done!")
+            
+            with status_box.container():
+                render_ai_loader("Packaging final verification metrics...")
+                
+            status_box.empty()  # Clear loader
 
             # ── Results ───────────────────────────────────────────────────────
             render_prediction_badge(prediction.label, prediction.confidence)
@@ -98,30 +110,30 @@ def render(
 
             st.markdown(
                 f"""
-                <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr;
-                            gap:0.5rem; margin-top:1rem; font-size:0.85rem;">
-                    <div style="background:rgba(30,39,56,0.7); border-radius:8px;
-                                padding:0.6rem; text-align:center;">
-                        <div style="color:#95a5a6;">✅ Real Prob</div>
-                        <div style="font-weight:700; color:#2ecc71;">{real_pct}%</div>
+                <div style="display:grid; grid-template-columns:1fr 1fr;
+                            gap:0.75rem; margin-top:1.2rem; font-size:0.88rem;">
+                    <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius:12px;
+                                padding:0.8rem; text-align:center;">
+                        <div style="color: var(--text-secondary); font-weight:600; font-size:0.78rem;">✅ REAL PROB</div>
+                        <div style="font-weight:800; color: var(--success); font-size:1.2rem; margin-top:0.2rem;">{real_pct}%</div>
                     </div>
-                    <div style="background:rgba(30,39,56,0.7); border-radius:8px;
-                                padding:0.6rem; text-align:center;">
-                        <div style="color:#95a5a6;">⚠️ Fake Prob</div>
-                        <div style="font-weight:700; color:#e74c3c;">{fake_pct}%</div>
+                    <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius:12px;
+                                padding:0.8rem; text-align:center;">
+                        <div style="color: var(--text-secondary); font-weight:600; font-size:0.78rem;">⚠️ FAKE PROB</div>
+                        <div style="font-weight:800; color: var(--danger); font-size:1.2rem; margin-top:0.2rem;">{fake_pct}%</div>
                     </div>
-                    <div style="background:rgba(30,39,56,0.7); border-radius:8px;
-                                padding:0.6rem; text-align:center;">
-                        <div style="color:#95a5a6;">⚡ Speed</div>
-                        <div style="font-weight:700; color:#5dade2;">
+                    <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius:12px;
+                                padding:0.8rem; text-align:center;">
+                        <div style="color: var(--text-secondary); font-weight:600; font-size:0.78rem;">⚡ SPEED</div>
+                        <div style="font-weight:800; color: var(--primary-light); font-size:1.2rem; margin-top:0.2rem;">
                             {prediction.processing_time_ms:.0f} ms
                         </div>
                     </div>
-                    <div style="background:rgba(30,39,56,0.7); border-radius:8px;
-                                padding:0.6rem; text-align:center;">
-                        <div style="color:#95a5a6;">👤 Face</div>
-                        <div style="font-weight:700;
-                                    color:{'#2ecc71' if prediction.face_detected else '#e74c3c'}">
+                    <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius:12px;
+                                padding:0.8rem; text-align:center;">
+                        <div style="color: var(--text-secondary); font-weight:600; font-size:0.78rem;">👤 FACE CROP</div>
+                        <div style="font-weight:800;
+                                    color:{'var(--success)' if prediction.face_detected else 'var(--danger)'}; font-size:1.2rem; margin-top:0.2rem;">
                             {"Detected" if prediction.face_detected else "Not Found"}
                         </div>
                     </div>
@@ -130,10 +142,9 @@ def render(
                 unsafe_allow_html=True,
             )
 
-
         except Exception as exc:
             st.error(f"❌ Detection failed: {exc}")
-            progress.empty()
+            status_box.empty()
             return
 
     # ── Grad-CAM section ──────────────────────────────────────────────────────
@@ -154,25 +165,47 @@ def render(
     st.divider()
     col_save, col_pdf = st.columns(2)
 
+    if st.session_state.get("last_saved_filename") != uploaded.name:
+        st.session_state["last_saved_filename"] = uploaded.name
+        st.session_state["last_saved_id"] = None
+
     with col_save:
-        if st.button("💾 Save to History", use_container_width=True):
-            try:
-                repo.insert_detection(
-                    file_name=uploaded.name,
-                    prediction=prediction.label,
-                    confidence=prediction.confidence,
-                    fake_probability=prediction.fake_probability,
-                    file_type="image",
-                    model_name=model_name,
-                    processing_time=prediction.processing_time_ms,
-                )
-                st.success("✅ Saved to detection history!")
-            except Exception as exc:
-                st.error(f"Failed to save: {exc}")
+        if st.session_state.get("last_saved_id") is not None:
+            st.success("✅ Saved to detection history!")
+        else:
+            if st.button("💾 Save to History", use_container_width=True, key="img_save_btn"):
+                try:
+                    record_id = repo.insert_detection(
+                        file_name=uploaded.name,
+                        prediction=prediction.label,
+                        confidence=prediction.confidence,
+                        fake_probability=prediction.fake_probability,
+                        file_type="image",
+                        model_name=model_name,
+                        processing_time=prediction.processing_time_ms,
+                    )
+                    st.session_state["last_saved_id"] = record_id
+                    st.success("✅ Saved to detection history!")
+                    st.rerun()
+                except Exception as exc:
+                    st.error(f"Failed to save: {exc}")
 
     with col_pdf:
-        if st.button("📄 Generate PDF Report", use_container_width=True):
+        if st.button("📄 Generate PDF Report", use_container_width=True, key="img_pdf_btn"):
             try:
+                record_id = st.session_state.get("last_saved_id")
+                if record_id is None:
+                    record_id = repo.insert_detection(
+                        file_name=uploaded.name,
+                        prediction=prediction.label,
+                        confidence=prediction.confidence,
+                        fake_probability=prediction.fake_probability,
+                        file_type="image",
+                        model_name=model_name,
+                        processing_time=prediction.processing_time_ms,
+                    )
+                    st.session_state["last_saved_id"] = record_id
+
                 overlay_arr = gradcam_result.overlay if gradcam_result else None
                 pdf_path = pdf_gen.generate(
                     file_name=uploaded.name,
@@ -183,9 +216,11 @@ def render(
                     gradcam_image=overlay_arr,
                     model_name=model_name,
                 )
+                repo.update_report_path(record_id, str(pdf_path))
+                
                 with open(str(pdf_path), "rb") as f:
                     st.download_button(
-                        label="⬇️ Download PDF",
+                        label="⬇️ Download PDF Report",
                         data=f.read(),
                         file_name=pdf_path.name,
                         mime="application/pdf",
@@ -199,13 +234,13 @@ def _render_upload_placeholder() -> None:
     """Show a placeholder UI before any file is uploaded."""
     st.markdown(
         """
-        <div style="text-align:center; padding:3rem; border:2px dashed rgba(93,173,226,0.3);
-             border-radius:16px; color:#95a5a6; margin-top:1rem;">
-            <div style="font-size:3rem;">🖼️</div>
-            <div style="font-size:1.1rem; font-weight:600; margin:0.5rem 0;">
-                Drop an image here or click to upload
+        <div style="text-align:center; padding:5rem 3rem; border:2px dashed var(--border);
+             border-radius:var(--radius); color: var(--text-secondary); margin-top:1rem; background: var(--bg-card);">
+            <div style="font-size:3.5rem; margin-bottom: 1rem;">🖼️</div>
+            <div style="font-size:1.25rem; font-weight:700; margin:0.5rem 0; color: var(--text-primary);">
+                Drop an image here or click to browse
             </div>
-            <div style="font-size:0.85rem;">Supported: JPG, JPEG, PNG, BMP, WEBP</div>
+            <div style="font-size:0.88rem; opacity: 0.85;">Supported file formats: JPG · JPEG · PNG · BMP · WEBP</div>
         </div>
         """,
         unsafe_allow_html=True,

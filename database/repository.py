@@ -159,6 +159,47 @@ class DetectionRepository:
         row = cursor.fetchone()
         return dict(row) if row else None
 
+    def get_for_report(self, record_id: int) -> Optional[Dict]:
+        """
+        Retrieve a single detection record formatted for report generation.
+
+        Args:
+            record_id: Row ID to look up.
+
+        Returns:
+            Dict of formatted row values, or ``None`` if not found.
+        """
+        row = self.get_by_id(record_id)
+        if not row:
+            return None
+        if row.get("timestamp"):
+            try:
+                row["timestamp"] = datetime.fromisoformat(row["timestamp"])
+            except Exception:
+                row["timestamp"] = datetime.now()
+        else:
+            row["timestamp"] = datetime.now()
+        return row
+
+    def update_report_path(self, record_id: int, report_path: str) -> bool:
+        """
+        Update the PDF report path for a specific detection record.
+
+        Args:
+            record_id:   Row ID to update.
+            report_path: Path to the generated PDF.
+
+        Returns:
+            ``True`` if a row was updated.
+        """
+        assert self._conn is not None
+        cursor = self._conn.execute(
+            "UPDATE detections SET report_path = ? WHERE id = ?",
+            (report_path, record_id)
+        )
+        self._conn.commit()
+        return cursor.rowcount > 0
+
     def get_statistics(self) -> Dict:
         """
         Compute summary statistics for the dashboard KPI cards.

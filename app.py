@@ -196,13 +196,16 @@ resources = load_model_and_detectors()
 with st.sidebar:
     st.markdown(
         """
-        <div style="text-align:center; padding:1rem 0;">
-            <div style="font-size:2.5rem;">🛡️</div>
-            <div style="font-family:'Outfit',sans-serif; font-weight:800;
-                        font-size:1.1rem; color:#5dade2; margin-top:0.3rem;">
-                DeepFake Detector
+        <div style="text-align:center; padding:1.2rem 0 0.5rem;">
+            <div style="font-size:2.8rem; line-height: 1;">🛡️</div>
+            <div style="font-family:'Outfit',sans-serif; font-weight:900;
+                        font-size:1.2rem; color:#3B82F6; margin-top:0.4rem;
+                        letter-spacing:-0.01em;">
+                DeepFake Detection AI
             </div>
-            <div style="font-size:0.7rem; color:#7f8c8d;">v1.0 · XceptionNet</div>
+            <div style="font-size:0.75rem; color:#94A3B8; margin-top:0.2rem;">
+                Version <b>v1.0</b> &nbsp;|&nbsp; Model <b>XceptionNet</b>
+            </div>
         </div>
         """,
         unsafe_allow_html=True,
@@ -210,13 +213,15 @@ with st.sidebar:
     st.divider()
 
     nav_options = {
-        "🏠 Home":              "home",
+        "🏠 Dashboard":         "home",
         "🖼️ Image Detection":   "image",
-        "🎬 Video Detection":   "video",
-        "📡 Webcam Detection":  "webcam",
+        "🎥 Video Detection":   "video",
+        "📷 Webcam Detection":  "webcam",
         "📦 Batch Detection":   "batch",
+        "📊 Analytics":         "analytics",
         "📄 Reports":           "reports",
-        "🕒 Detection History": "history",
+        "🕒 History":           "history",
+        "⚙️ Settings":          "settings",
         "ℹ️ About":             "about",
     }
 
@@ -229,21 +234,99 @@ with st.sidebar:
 
     st.divider()
 
-    # Model status
+    # ── Model Status ──────────────────────────────────────────────────────────
+    is_loaded = resources['model_status'].startswith("✅")
+    status_color = "#22C55E" if is_loaded else "#F59E0B"
     st.markdown(
         f"""
-        <div style="background:rgba(30,39,56,0.7); border-radius:8px;
-                    padding:0.8rem; font-size:0.78rem;">
-            <div style="color:#95a5a6; margin-bottom:0.3rem;">🤖 Model Status</div>
-            <div style="color:#ecf0f1;">{resources['model_status']}</div>
+        <div style="background:var(--bg-card); border-radius:12px;
+                    padding:0.9rem; font-size:0.82rem; border:1px solid var(--border);
+                    border-left: 4px solid {status_color}; margin-bottom: 0.8rem;">
+            <div style="color:var(--text-secondary); margin-bottom:0.3rem; font-weight:600;">
+                🤖 Active Model
+            </div>
+            <div style="color:var(--text-primary); font-weight:700;">{resources['model_name']}</div>
+            <div style="color:{status_color}; font-size:0.72rem; margin-top:0.2rem; font-weight:500;">
+                {resources['model_status']}
+            </div>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
+    # ── Resource meters ────────────────────────────────────────────────────────
+    st.markdown(
+        """
+        <div style="background:var(--bg-card); border-radius:12px;
+                    padding:0.9rem; font-size:0.82rem; border:1px solid var(--border);
+                    margin-bottom:0.8rem;">
+            <div style="color:var(--text-secondary); font-weight:600; margin-bottom:0.4rem;">
+                🖥️ System Status
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.2rem;">
+                <span>CPU / Memory</span><span style="font-weight:700;">Normal</span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+                <span>GPU Acceleration</span><span style="font-weight:700; color:#F59E0B;">Not Available</span>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # ── Theme Toggle ──────────────────────────────────────────────────────────
+    theme_choice = st.selectbox(
+        "Theme",
+        ["🌙 Dark Theme", "☀️ Light Theme"],
+        index=0 if st.session_state.get("theme", "dark") == "dark" else 1,
+        key="theme_selector",
+        label_visibility="collapsed",
+    )
+    if "Light" in theme_choice:
+        st.session_state["theme"] = "light"
+        st.markdown(
+            """
+            <style>
+            :root {
+              --bg-dark:        #F8FAFC !important;
+              --bg-card:        rgba(255, 255, 255, 0.9) !important;
+              --bg-card-hover:  rgba(59, 130, 246, 0.05) !important;
+              --border:         rgba(59, 130, 246, 0.12) !important;
+              --text-primary:   #0F172A !important;
+              --text-secondary: #64748B !important;
+              --glass:          rgba(0, 0, 0, 0.02) !important;
+              --shadow:         0 10px 40px rgba(15, 23, 42, 0.06) !important;
+            }
+            .stApp {
+              background: #F8FAFC !important;
+              color: #0F172A !important;
+            }
+            [data-testid="stSidebar"] {
+              background: #FFFFFF !important;
+              border-right: 1px solid rgba(0,0,0,0.06) !important;
+            }
+            .stRadio > label, .stSelectbox > label, .stTextInput > label, .stSlider > label {
+              color: #0F172A !important;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True,
+        )
+    else:
+        st.session_state["theme"] = "dark"
+
 
 # ── Page routing ──────────────────────────────────────────────────────────────
 page_key = nav_options[selected_page]
+
+# Handle dashboard home page routes redirection helpers
+if "home_redirect" in st.session_state:
+    page_key = st.session_state.pop("home_redirect")
+    # Reset radio selection visually
+    for k, v in nav_options.items():
+        if v == page_key:
+            st.session_state["main_nav"] = k
+            break
 
 if page_key == "home":
     from dashboard.pages.home import render
@@ -274,6 +357,7 @@ elif page_key == "webcam":
         image_detector=resources["image_detector"],
         repo=repo,
         model_name=resources["model_name"],
+        gradcam=resources["gradcam"],
     )
 
 elif page_key == "batch":
@@ -285,13 +369,28 @@ elif page_key == "batch":
         model_name=resources["model_name"],
     )
 
+elif page_key == "analytics":
+    from dashboard.pages.analytics import render as render_analytics
+    render_analytics(repo=repo)
+
 elif page_key == "reports":
     from dashboard.pages.reports import render
-    render(reports_dir=str(ROOT / "outputs" / "reports"))
+    render(
+        reports_dir=str(ROOT / "outputs" / "reports"),
+        repo=repo,
+        pdf_gen=resources["pdf_gen"],
+    )
 
 elif page_key == "history":
     from dashboard.pages.history import render
     render(repo=repo)
+
+elif page_key == "settings":
+    from dashboard.pages.settings import render as render_settings
+    render_settings(
+        image_detector=resources["image_detector"],
+        video_detector=resources["video_detector"],
+    )
 
 elif page_key == "about":
     from dashboard.pages.about import render as render_about

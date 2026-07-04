@@ -1,58 +1,99 @@
 /* =============================================================================
-   DeepFake Detection System — Custom Streamlit CSS
-   Dark-first design with glassmorphism and vibrant accents
+   DeepFake Detection System — Custom AI SaaS style.css
+   Modern, minimal, premium styling with glassmorphism & responsive dark/light variables
    ============================================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap');
 
-/* ── Root Variables ─────────────────────────────────────────────────────────── */
+/* ── Global CSS Variables (Dark theme default) ────────────────────────────── */
 :root {
-  --primary:        #2980b9;
-  --primary-light:  #5dade2;
-  --primary-dark:   #1a5276;
-  --accent:         #e74c3c;
-  --accent-light:   #ff6b6b;
-  --success:        #2ecc71;
-  --warning:        #f39c12;
-  --bg-dark:        #0f1117;
-  --bg-card:        rgba(30, 39, 56, 0.85);
-  --bg-card-hover:  rgba(41, 128, 185, 0.12);
-  --border:         rgba(93, 173, 226, 0.2);
-  --text-primary:   #ecf0f1;
-  --text-secondary: #95a5a6;
-  --glass:          rgba(255, 255, 255, 0.03);
-  --shadow:         0 8px 32px rgba(0, 0, 0, 0.4);
-  --radius:         12px;
-  --radius-lg:      20px;
-  --font-main:      'Inter', sans-serif;
-  --font-heading:   'Outfit', sans-serif;
-  --transition:     all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --primary:        #3B82F6;
+  --primary-light:  #60A5FA;
+  --primary-dark:   #1D4ED8;
+  --accent:         #60A5FA;
+  --success:        #22C55E;
+  --danger:         #EF4444;
+  --warning:        #F59E0B;
+  --bg-dark:        #0F172A;
+  --bg-card:        rgba(30, 41, 59, 0.7);
+  --bg-card-hover:  rgba(59, 130, 246, 0.08);
+  --border:         rgba(96, 165, 250, 0.12);
+  --text-primary:   #F8FAFC;
+  --text-secondary: #94A3B8;
+  --glass:          rgba(255, 255, 255, 0.02);
+  --shadow:         0 10px 40px rgba(0, 0, 0, 0.35);
+  --radius:         18px;
+  --radius-lg:      24px;
+  --font-main:      'Inter', 'Poppins', sans-serif;
+  --font-heading:   'Outfit', 'Poppins', sans-serif;
+  --transition:     all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ── Base App ────────────────────────────────────────────────────────────────── */
 .stApp {
-  background: linear-gradient(135deg, #0f1117 0%, #1a1f2e 50%, #0d1520 100%);
+  background: var(--bg-dark) !important;
   font-family: var(--font-main);
   color: var(--text-primary);
+  transition: var(--transition);
 }
 
 /* ── Sidebar ─────────────────────────────────────────────────────────────────── */
 [data-testid="stSidebar"] {
-  background: linear-gradient(180deg, #0d1520 0%, #121929 100%) !important;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%) !important;
   border-right: 1px solid var(--border) !important;
+  backdrop-filter: blur(20px);
 }
 
-[data-testid="stSidebar"] .block-container {
-  padding: 1rem 0.8rem;
+/* ── Headings & Typography ────────────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading) !important;
+  color: var(--text-primary) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  margin-bottom: 0.5rem !important;
 }
 
-/* ── Metric Cards ────────────────────────────────────────────────────────────── */
+h1 { font-weight: 900 !important; }
+h2 { font-weight: 800 !important; }
+
+/* ── Glassmorphism Cards ─────────────────────────────────────────────────────── */
+.glass-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  margin-bottom: 1.2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.03), transparent);
+  pointer-events: none;
+}
+
+.glass-card:hover {
+  border-color: var(--primary-light);
+  transform: translateY(-3px);
+  box-shadow: 0 15px 45px rgba(59, 130, 246, 0.15);
+}
+
+/* ── Metric Cards Overrides ─────────────────────────────────────────────────── */
 [data-testid="metric-container"] {
   background: var(--bg-card) !important;
   border: 1px solid var(--border) !important;
   border-radius: var(--radius) !important;
-  padding: 1.2rem 1rem !important;
-  backdrop-filter: blur(10px) !important;
+  padding: 1.2rem 1.2rem !important;
+  backdrop-filter: blur(12px) !important;
   box-shadow: var(--shadow) !important;
   transition: var(--transition) !important;
 }
@@ -60,41 +101,67 @@
 [data-testid="metric-container"]:hover {
   border-color: var(--primary-light) !important;
   transform: translateY(-2px) !important;
-  box-shadow: 0 12px 40px rgba(41, 128, 185, 0.25) !important;
+  box-shadow: 0 15px 45px rgba(59, 130, 246, 0.12) !important;
 }
 
 [data-testid="stMetricValue"] {
   font-family: var(--font-heading) !important;
-  font-weight: 700 !important;
+  font-weight: 800 !important;
   color: var(--primary-light) !important;
+  letter-spacing: -0.03em !important;
 }
 
-/* ── Buttons ─────────────────────────────────────────────────────────────────── */
+[data-testid="stMetricLabel"] {
+  font-family: var(--font-main) !important;
+  color: var(--text-secondary) !important;
+  font-weight: 500 !important;
+}
+
+/* ── Buttons (AI SaaS Style) ─────────────────────────────────────────────────── */
 .stButton > button {
   background: linear-gradient(135deg, var(--primary), var(--primary-dark)) !important;
-  color: white !important;
+  color: #FFFFFF !important;
   border: none !important;
-  border-radius: 8px !important;
+  border-radius: 12px !important;
   font-family: var(--font-main) !important;
   font-weight: 600 !important;
-  font-size: 0.9rem !important;
-  padding: 0.5rem 1.5rem !important;
+  font-size: 0.92rem !important;
+  padding: 0.6rem 1.8rem !important;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3) !important;
   transition: var(--transition) !important;
-  letter-spacing: 0.3px !important;
+  letter-spacing: 0.2px !important;
+  width: 100%;
 }
 
 .stButton > button:hover {
   background: linear-gradient(135deg, var(--primary-light), var(--primary)) !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 6px 20px rgba(41, 128, 185, 0.4) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.45) !important;
 }
 
-/* ── File Uploader ───────────────────────────────────────────────────────────── */
+.stButton > button:active {
+  transform: translateY(0) !important;
+}
+
+/* Secondary Button style helper class override */
+.stButton > button[kind="secondary"] {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: none !important;
+}
+
+.stButton > button[kind="secondary"]:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: var(--primary-light) !important;
+}
+
+/* ── File Uploader (Premium Style) ───────────────────────────────────────────── */
 [data-testid="stFileUploader"] {
   background: var(--glass) !important;
   border: 2px dashed var(--border) !important;
   border-radius: var(--radius) !important;
-  padding: 1rem !important;
+  padding: 1.5rem !important;
   transition: var(--transition) !important;
 }
 
@@ -103,138 +170,162 @@
   background: var(--bg-card-hover) !important;
 }
 
-/* ── DataFrames / Tables ─────────────────────────────────────────────────────── */
+/* ── Select Boxes & Inputs ───────────────────────────────────────────────────── */
+.stSelectbox > div > div, .stTextInput > div > div {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  color: var(--text-primary) !important;
+  backdrop-filter: blur(8px) !important;
+  transition: var(--transition) !important;
+}
+
+.stSelectbox > div > div:focus-within, .stTextInput > div > div:focus-within {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* ── Progress Bars ───────────────────────────────────────────────────────────── */
+.stProgress > div > div > div {
+  background: linear-gradient(90deg, var(--primary), var(--primary-light)) !important;
+  border-radius: 50px !important;
+  height: 8px !important;
+}
+
+/* ── Alerts & Warnings ───────────────────────────────────────────────────────── */
+.stAlert {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  color: var(--text-primary) !important;
+  backdrop-filter: blur(8px) !important;
+  box-shadow: var(--shadow) !important;
+}
+
+/* ── DataFrames & Table Layouts ──────────────────────────────────────────────── */
 .stDataFrame {
   border: 1px solid var(--border) !important;
   border-radius: var(--radius) !important;
   overflow: hidden !important;
+  background: var(--bg-card) !important;
 }
 
-/* ── Info / Warning / Error boxes ───────────────────────────────────────────── */
-.stAlert {
-  border-radius: var(--radius) !important;
-  backdrop-filter: blur(8px) !important;
-}
-
-/* ── Progress Bar ────────────────────────────────────────────────────────────── */
-.stProgress > div > div > div {
-  background: linear-gradient(90deg, var(--primary), var(--accent-light)) !important;
-  border-radius: 4px !important;
-}
-
-/* ── Headings ────────────────────────────────────────────────────────────────── */
-h1, h2, h3 {
-  font-family: var(--font-heading) !important;
-  color: var(--text-primary) !important;
-}
-
-h1 { font-weight: 900 !important; }
-h2 { font-weight: 700 !important; }
-h3 { font-weight: 600 !important; }
-
-/* ── Custom prediction badge ─────────────────────────────────────────────────── */
+/* ── Custom prediction badges (Vibrant Glassmorphic Glows) ────────────────────── */
 .fake-badge {
   display: inline-block;
-  background: linear-gradient(135deg, #c0392b, #e74c3c);
-  color: white;
+  background: linear-gradient(135deg, rgba(239,68,68,0.2) 0%, rgba(239,68,68,0.4) 100%);
+  border: 2px solid var(--danger);
+  color: #FF8A8A;
   font-family: var(--font-heading);
   font-weight: 800;
-  font-size: 2rem;
-  padding: 0.6rem 2rem;
+  font-size: 2.2rem;
+  padding: 0.6rem 2.5rem;
   border-radius: 50px;
   text-align: center;
-  letter-spacing: 3px;
-  box-shadow: 0 4px 20px rgba(231, 76, 60, 0.5);
-  animation: pulse-red 2s infinite;
+  letter-spacing: 2px;
+  box-shadow: 0 0 25px rgba(239, 68, 68, 0.4);
+  animation: pulse-red 2.5s infinite ease-in-out;
 }
 
 .real-badge {
   display: inline-block;
-  background: linear-gradient(135deg, #1a8a4a, #2ecc71);
-  color: white;
+  background: linear-gradient(135deg, rgba(34,197,94,0.2) 0%, rgba(34,197,94,0.4) 100%);
+  border: 2px solid var(--success);
+  color: #8AFF8A;
   font-family: var(--font-heading);
   font-weight: 800;
-  font-size: 2rem;
-  padding: 0.6rem 2rem;
+  font-size: 2.2rem;
+  padding: 0.6rem 2.5rem;
   border-radius: 50px;
   text-align: center;
-  letter-spacing: 3px;
-  box-shadow: 0 4px 20px rgba(46, 204, 113, 0.4);
+  letter-spacing: 2px;
+  box-shadow: 0 0 25px rgba(34, 197, 94, 0.35);
+  animation: glow-green 3s infinite ease-in-out;
 }
 
 @keyframes pulse-red {
-  0%, 100% { box-shadow: 0 4px 20px rgba(231, 76, 60, 0.5); }
-  50%       { box-shadow: 0 4px 40px rgba(231, 76, 60, 0.9); }
+  0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.3); transform: scale(1); }
+  50%       { box-shadow: 0 0 35px rgba(239, 68, 68, 0.65); transform: scale(1.02); }
 }
 
-/* ── Glassmorphism cards ─────────────────────────────────────────────────────── */
-.glass-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  backdrop-filter: blur(12px);
-  box-shadow: var(--shadow);
-  transition: var(--transition);
-  margin-bottom: 1rem;
+@keyframes glow-green {
+  0%, 100% { box-shadow: 0 0 20px rgba(34, 197, 94, 0.25); }
+  50%       { box-shadow: 0 0 35px rgba(34, 197, 94, 0.55); }
 }
 
-.glass-card:hover {
-  border-color: var(--primary-light);
-  box-shadow: 0 12px 40px rgba(41, 128, 185, 0.2);
-}
-
-/* ── Confidence bar ──────────────────────────────────────────────────────────── */
+/* ── Confidence Indicator Dial/Bar ─────────────────────────────────────────────── */
 .confidence-bar-container {
-  background: rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.06);
   border-radius: 50px;
-  height: 12px;
+  height: 14px;
   overflow: hidden;
-  margin: 0.5rem 0;
+  margin: 0.6rem 0;
+  border: 1px solid rgba(255,255,255,0.03);
 }
 
 .confidence-bar-fill-fake {
   height: 100%;
-  background: linear-gradient(90deg, #f39c12, #e74c3c);
+  background: linear-gradient(90deg, var(--warning), var(--danger));
   border-radius: 50px;
-  transition: width 0.8s ease;
+  transition: width 1s cubic-bezier(0.1, 0.8, 0.2, 1);
 }
 
 .confidence-bar-fill-real {
   height: 100%;
-  background: linear-gradient(90deg, #27ae60, #2ecc71);
+  background: linear-gradient(90deg, #10B981, var(--success));
   border-radius: 50px;
-  transition: width 0.8s ease;
+  transition: width 1s cubic-bezier(0.1, 0.8, 0.2, 1);
 }
 
-/* ── Sidebar nav items ────────────────────────────────────────────────────────── */
+/* ── Navigation Links list ─────────────────────────────────────────────────────── */
 .nav-item {
-  padding: 0.6rem 1rem;
-  border-radius: 8px;
-  margin: 0.2rem 0;
+  padding: 0.75rem 1.2rem;
+  border-radius: 12px;
+  margin: 0.3rem 0;
   cursor: pointer;
   transition: var(--transition);
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 0.95rem;
   color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .nav-item:hover, .nav-item.active {
   background: var(--bg-card-hover);
   color: var(--primary-light);
-  border-left: 3px solid var(--primary-light);
-  padding-left: 0.85rem;
+  transform: translateX(3px);
 }
 
-/* ── Select boxes ────────────────────────────────────────────────────────────── */
-.stSelectbox > div > div {
-  background: var(--bg-card) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: 8px !important;
-  color: var(--text-primary) !important;
+/* ── Custom Loader Animations ──────────────────────────────────────────────────── */
+.loader-ring {
+  border: 4px solid rgba(59, 130, 246, 0.1);
+  border-radius: 50%;
+  border-top: 4px solid var(--primary);
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 1.5rem auto;
 }
 
-/* ── Scrollbar ───────────────────────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ── Scrollbars ───────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: var(--bg-dark); }
-::-webkit-scrollbar-thumb { background: var(--primary-dark); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.2); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+/* ── Dynamic Fade-in Animation ─────────────────────────────────────────────────── */
+.fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}

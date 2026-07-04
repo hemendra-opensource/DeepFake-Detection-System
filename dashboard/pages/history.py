@@ -2,10 +2,12 @@
 dashboard/pages/history.py
 ============================
 Detection history page — displays, filters, and deletes past records.
+Redesigned with premium filters, date range pickers, and record management.
 """
 
 import pandas as pd
 import streamlit as st
+from datetime import datetime
 
 
 def render(repo: "DetectionRepository") -> None:  # type: ignore[name-defined]
@@ -15,9 +17,10 @@ def render(repo: "DetectionRepository") -> None:  # type: ignore[name-defined]
     Args:
         repo: :class:`DetectionRepository` instance.
     """
-    st.markdown("## 🕒 Detection History")
+    st.markdown("## 🕒 Detection History Log")
     st.markdown(
-        "<p style='color:#95a5a6;'>All past detection records stored in the local SQLite database.</p>",
+        "<p style='color: var(--text-secondary);'>Search, filter, and manage past detection runs "
+        "stored in the local SQLite database.</p>",
         unsafe_allow_html=True,
     )
 
@@ -29,17 +32,24 @@ def render(repo: "DetectionRepository") -> None:  # type: ignore[name-defined]
         return
 
     if df.empty:
-        st.info("📭 No detection history yet. Run some detections first!")
+        st.info("📭 No detection history found yet. Run some detections first!")
         return
 
-    # ── Filters ───────────────────────────────────────────────────────────────
+    # ── Modern Filters Section ──────────────────────────────────────────────────
+    st.markdown("### 🔍 Search & Filters")
     col_f1, col_f2, col_f3 = st.columns(3)
     with col_f1:
-        filter_pred = st.selectbox("Filter by Prediction", ["All", "FAKE", "REAL"])
+        filter_pred = st.selectbox("Filter Prediction", ["All", "FAKE", "REAL"], key="hist_filter_pred")
     with col_f2:
-        filter_type = st.selectbox("Filter by File Type", ["All", "image", "video"])
+        filter_type = st.selectbox("Filter File Type", ["All", "image", "video"], key="hist_filter_type")
     with col_f3:
-        search_name = st.text_input("Search by File Name", "")
+        search_name = st.text_input("Search File Name", "", key="hist_search_name")
+
+    col_d1, col_d2 = st.columns(2)
+    with col_d1:
+        start_date = st.date_input("Start Date", value=None, key="hist_start_date")
+    with col_d2:
+        end_date = st.date_input("End Date", value=None, key="hist_end_date")
 
     # Apply filters
     filtered = df.copy()
@@ -51,90 +61,88 @@ def render(repo: "DetectionRepository") -> None:  # type: ignore[name-defined]
         filtered = filtered[
             filtered["file_name"].str.contains(search_name, case=False, na=False)
         ]
+        
+    # Date range filters
+    if start_date is not None:
+        filtered = filtered[pd.to_datetime(filtered["timestamp"]).dt.date >= start_date]
+    if end_date is not None:
+        filtered = filtered[pd.to_datetime(filtered["timestamp"]).dt.date <= end_date]
 
     st.markdown(
         f"Showing **{len(filtered)}** of **{len(df)}** records",
     )
 
-    # ── Table ─────────────────────────────────────────────────────────────────
+    # ── Results Grid / Table ──────────────────────────────────────────────────
     display_cols = [
         "id", "file_name", "file_type", "prediction",
         "confidence", "model_name", "processing_time", "timestamp",
     ]
-    display_df = filtered[[c for c in display_cols if c in filtered.columns]]
+    
+    # Rename columns for prettier headers
+    display_df = filtered[[c for c in display_cols if c in filtered.columns]].copy()
+    display_df = display_df.rename(columns={
+        "id": "ID",
+        "file_name": "File Name",
+        "file_type": "Medium",
+        "prediction": "Prediction",
+        "confidence": "Confidence",
+        "model_name": "Model",
+        "processing_time": "Speed (ms)",
+        "timestamp": "Timestamp"
+    })
 
     def highlight_prediction(val: str) -> str:
         if val == "FAKE":
-            return "color: #e74c3c; font-weight: bold"
+            return "color: var(--danger); font-weight: bold"
         elif val == "REAL":
-            return "color: #2ecc71; font-weight: bold"
+            return "color: var(--success); font-weight: bold"
         return ""
 
     st.dataframe(
-        display_df.style.applymap(highlight_prediction, subset=["prediction"]),
+        display_df.style.applymap(highlight_prediction, subset=["Prediction"]),
         use_container_width=True,
         hide_index=True,
     )
 
-    # ── Export ────────────────────────────────────────────────────────────────
-    col_csv, col_del = st.columns(2)
-    with col_csv:
-        csv = filtered.to_csv(index=False).encode("utf-8")
-        st.download_button(
-            "⬇️ Export Filtered CSV",
-            data=csv,
-            file_name="detection_history.csv",
-            mime="text/csv",
-            use_container_width=True,
-        )
-    with col_del:
-        if st.button("🗑️ Clear ALL History", use_container_width=True, type="secondary"):
-            if st.session_state.get("confirm_delete"):
-                deleted = repo.delete_all()
-                st.success(f"Deleted {deleted} records.")
-                st.session_state["confirm_delete"] = False
+    # ── Record Management Actions ──────────────────────────────────────────────
+    st.divider()
+    st.markdown("### 🛠️ Record Management")
+    
+    col_del_single, col_del_bulk = st.columns(2)
+    
+    with col_del_single:
+        # Delete specific record ID
+        st.markdown("<h5 style='font-size:0.95rem;'>🗑️ Delete Single Record</h5>", unsafe_allow_html=True)
+        delete_id = st.number_input("Record ID to Delete", min_value=1, step=1, key="hist_delete_id")
+        if st.button("Delete Record", type="secondary", key="hist_delete_btn"):
+            if repo.delete_by_id(delete_id):
+                st.success(f"Record #{delete_id} deleted successfully.")
                 st.rerun()
             else:
-                st.session_state["confirm_delete"] = True
-                st.warning("⚠️ Click again to confirm deletion of ALL records.")
+                st.error(f"Record #{delete_id} not found in database.")
 
-    # ── Charts ────────────────────────────────────────────────────────────────
-    if len(filtered) > 0:
-        st.divider()
-        st.markdown("### 📊 History Analytics")
-        import plotly.express as px
+    with col_del_bulk:
+        st.markdown("<h5 style='font-size:0.95rem;'>⚠️ Bulk Actions</h5>", unsafe_allow_html=True)
+        # Clear all
+        if st.button("🗑️ Clear ALL History Logs", use_container_width=True, type="secondary", key="hist_clear_all"):
+            if st.session_state.get("confirm_delete_all"):
+                deleted = repo.delete_all()
+                st.success(f"Deleted {deleted} records.")
+                st.session_state["confirm_delete_all"] = False
+                st.rerun()
+            else:
+                st.session_state["confirm_delete_all"] = True
+                st.warning("⚠️ Click again to confirm deletion of ALL records from SQLite database.")
 
-        col_c1, col_c2 = st.columns(2)
-
-        with col_c1:
-            pie = px.pie(
-                values=filtered["prediction"].value_counts().values,
-                names=filtered["prediction"].value_counts().index,
-                color=filtered["prediction"].value_counts().index,
-                color_discrete_map={"FAKE": "#e74c3c", "REAL": "#2ecc71"},
-                hole=0.5,
-                title="Prediction Distribution",
-            )
-            pie.update_layout(
-                paper_bgcolor="rgba(0,0,0,0)",
-                plot_bgcolor="rgba(0,0,0,0)",
-                font_color="#ecf0f1",
-            )
-            st.plotly_chart(pie, use_container_width=True)
-
-        with col_c2:
-            hist = px.histogram(
-                filtered,
-                x="confidence",
-                nbins=20,
-                title="Confidence Distribution",
-                color_discrete_sequence=["#5dade2"],
-            )
-            hist.update_layout(
-                paper_bgcolor="rgba(0,0,0,0)",
-                plot_bgcolor="rgba(0,0,0,0)",
-                font_color="#ecf0f1",
-                xaxis_gridcolor="rgba(255,255,255,0.05)",
-                yaxis_gridcolor="rgba(255,255,255,0.05)",
-            )
-            st.plotly_chart(hist, use_container_width=True)
+    # ── Export ────────────────────────────────────────────────────────────────
+    st.divider()
+    st.markdown("### ⬇️ Export Log Metadata")
+    csv = filtered.to_csv(index=False).encode("utf-8")
+    st.download_button(
+        "⬇️ Export Filtered CSV Log",
+        data=csv,
+        file_name="detection_history_log.csv",
+        mime="text/csv",
+        use_container_width=True,
+        key="hist_csv_export",
+    )

@@ -2,12 +2,7 @@
 dashboard/pages/home.py
 ========================
 Home / landing page of the DeepFake Detection dashboard.
-
-Displays:
-- Hero section with project branding
-- KPI cards from detection history
-- Quick navigation cards
-- Recent detections table
+Redesigned as a modern AI SaaS landing page.
 """
 
 import streamlit as st
@@ -25,44 +20,54 @@ def render(repo: "DetectionRepository") -> None:  # type: ignore[name-defined]
     # ── Hero section ─────────────────────────────────────────────────────────
     st.markdown(
         """
-        <div style="text-align:center; padding:2.5rem 0 1.5rem;">
-            <div style="font-size:3.5rem; margin-bottom:0.3rem;">🛡️</div>
-            <h1 style="font-family:'Outfit',sans-serif; font-size:2.8rem;
+        <div style="text-align:center; padding:3rem 0 2rem; animation: fadeIn 0.5s ease-out;">
+            <div style="font-size:4rem; margin-bottom:0.5rem; line-height: 1;">🛡️</div>
+            <h1 style="font-family:'Outfit',sans-serif; font-size:3.5rem;
                        font-weight:900; margin:0;
-                       background:linear-gradient(135deg,#5dade2,#2ecc71);
+                       background:linear-gradient(135deg, #3B82F6, #60A5FA, #22C55E);
                        -webkit-background-clip:text; -webkit-text-fill-color:transparent;">
-                DeepFake Detection System
+                Explainable DeepFake Detection
             </h1>
-            <p style="color:#95a5a6; font-size:1.1rem; margin-top:0.5rem;">
-                Powered by XceptionNet · Grad-CAM · Frame-wise Analysis
+            <p style="color: var(--text-secondary); font-size:1.25rem; margin-top:0.8rem; font-weight: 500; max-width: 800px; margin-left: auto; margin-right: auto;">
+                Detect manipulated images and videos using Explainable AI powered by XceptionNet and Grad-CAM.
             </p>
-            <div style="display:flex; justify-content:center; gap:0.5rem;
-                        flex-wrap:wrap; margin-top:1rem;">
-                <span style="background:rgba(41,128,185,0.2); color:#5dade2;
-                             padding:0.3rem 0.9rem; border-radius:50px;
-                             font-size:0.8rem; font-weight:600;">
-                    🤖 AI-Powered
+            <div style="display:flex; justify-content:center; gap:0.6rem;
+                        flex-wrap:wrap; margin-top:1.5rem;">
+                <span style="background:rgba(59,130,246,0.15); color:#60A5FA;
+                             padding:0.4rem 1.1rem; border-radius:50px;
+                             font-size:0.82rem; font-weight:600; border: 1px solid rgba(59,130,246,0.25);">
+                    🤖 XceptionNet Engine
                 </span>
-                <span style="background:rgba(46,204,113,0.2); color:#2ecc71;
-                             padding:0.3rem 0.9rem; border-radius:50px;
-                             font-size:0.8rem; font-weight:600;">
-                    🔬 Explainable
+                <span style="background:rgba(34,197,94,0.15); color:#22C55E;
+                             padding:0.4rem 1.1rem; border-radius:50px;
+                             font-size:0.82rem; font-weight:600; border: 1px solid rgba(34,197,94,0.25);">
+                    🔬 Grad-CAM Explanations
                 </span>
-                <span style="background:rgba(231,76,60,0.2); color:#e74c3c;
-                             padding:0.3rem 0.9rem; border-radius:50px;
-                             font-size:0.8rem; font-weight:600;">
-                    ⚡ Real-time
-                </span>
-                <span style="background:rgba(155,89,182,0.2); color:#9b59b6;
-                             padding:0.3rem 0.9rem; border-radius:50px;
-                             font-size:0.8rem; font-weight:600;">
-                    📊 Analytics
+                <span style="background:rgba(239,68,68,0.15); color:#EF4444;
+                             padding:0.4rem 1.1rem; border-radius:50px;
+                             font-size:0.82rem; font-weight:600; border: 1px solid rgba(239,68,68,0.25);">
+                    ⚡ Real-Time Inference
                 </span>
             </div>
         </div>
         """,
         unsafe_allow_html=True,
     )
+
+    # ── Quick Navigation buttons ──────────────────────────────────────────────
+    col_b1, col_b2, col_b3 = st.columns(3)
+    with col_b1:
+        if st.button("🖼️ Upload Image", use_container_width=True, key="home_btn_image"):
+            st.session_state["home_redirect"] = "image"
+            st.rerun()
+    with col_b2:
+        if st.button("🎥 Upload Video", use_container_width=True, key="home_btn_video"):
+            st.session_state["home_redirect"] = "video"
+            st.rerun()
+    with col_b3:
+        if st.button("📡 Start Webcam", use_container_width=True, key="home_btn_webcam"):
+            st.session_state["home_redirect"] = "webcam"
+            st.rerun()
 
     st.divider()
 
@@ -84,24 +89,24 @@ def render(repo: "DetectionRepository") -> None:  # type: ignore[name-defined]
     st.divider()
 
     # ── Feature cards ─────────────────────────────────────────────────────────
-    st.markdown("### 🚀 Features")
+    st.markdown("### 🚀 Core Capabilities")
     cols = st.columns(4)
     features = [
-        ("🖼️", "Image Detection", "Detect DeepFakes in photos with Grad-CAM explanation"),
-        ("🎬", "Video Analysis",  "Frame-wise analysis with temporal smoothing"),
-        ("📡", "Live Webcam",     "Real-time detection from your webcam feed"),
-        ("📦", "Batch Detection", "Process multiple files at once"),
+        ("🖼️", "Image Detection", "Detect DeepFakes in photos with detailed Grad-CAM visual activation heatmaps."),
+        ("🎥", "Video Analysis",  "Frame-by-frame deep neural network analysis with temporal probability smoothing."),
+        ("📷", "Live Webcam",     "Capture live frames from connected cameras and run real-time inference."),
+        ("📦", "Batch Processing", "Upload multiple media assets simultaneously and download aggregated CSV/JSON reports."),
     ]
     for col, (icon, title, desc) in zip(cols, features):
         with col:
             st.markdown(
                 f"""
-                <div class="glass-card" style="text-align:center; min-height:130px;">
-                    <div style="font-size:2rem;">{icon}</div>
-                    <div style="font-weight:700; margin:0.4rem 0; color:#ecf0f1;">
+                <div class="glass-card" style="text-align:center; min-height:160px; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:1.2rem;">
+                    <div style="font-size:2.2rem; margin-bottom: 0.5rem;">{icon}</div>
+                    <div style="font-weight:700; margin:0.4rem 0; color: var(--text-primary); font-size:1.05rem;">
                         {title}
                     </div>
-                    <div style="font-size:0.8rem; color:#95a5a6;">{desc}</div>
+                    <div style="font-size:0.82rem; color: var(--text-secondary); line-height:1.4;">{desc}</div>
                 </div>
                 """,
                 unsafe_allow_html=True,
@@ -110,48 +115,49 @@ def render(repo: "DetectionRepository") -> None:  # type: ignore[name-defined]
     st.divider()
 
     # ── Recent detections ──────────────────────────────────────────────────────
-    st.markdown("### 🕒 Recent Detections")
+    st.markdown("### 🕒 Recent Analysis Log")
     try:
         df = repo.get_all(limit=10)
         if df.empty:
-            st.info("No detections yet. Upload an image or video to get started.")
+            st.info("No detections logged yet. Run a detection to populate history.")
         else:
             display_cols = ["id", "file_name", "prediction", "confidence", "model_name", "timestamp"]
             display_df = df[[c for c in display_cols if c in df.columns]]
+            
+            # Reformat df columns for prettier headers
+            display_df = display_df.rename(columns={
+                "id": "ID",
+                "file_name": "File Name",
+                "prediction": "Prediction",
+                "confidence": "Confidence",
+                "model_name": "Model",
+                "timestamp": "Timestamp"
+            })
+            
+            def highlight_row(val):
+                if val == "FAKE":
+                    return "color: var(--danger); font-weight:bold"
+                if val == "REAL":
+                    return "color: var(--success); font-weight:bold"
+                return ""
+
             st.dataframe(
-                display_df.style.applymap(
-                    lambda v: "color: #e74c3c; font-weight:bold"
-                    if v == "FAKE"
-                    else "color: #2ecc71; font-weight:bold"
-                    if v == "REAL"
-                    else "",
-                    subset=["prediction"],
-                ),
+                display_df.style.applymap(highlight_row, subset=["Prediction"]),
                 use_container_width=True,
                 hide_index=True,
             )
     except Exception as exc:
         st.warning(f"⚠️ Could not load recent detections: {exc}")
 
-    # ── Architecture overview ──────────────────────────────────────────────────
+    # ── Premium Footer ────────────────────────────────────────────────────────
+    st.markdown("<br><br>", unsafe_allow_html=True)
     st.divider()
-    st.markdown("### 🏗️ System Architecture")
     st.markdown(
         """
-        ```
-        Input (Image / Video / Webcam)
-               ↓
-        Face Detection  [MediaPipe | OpenCV Haar]
-               ↓
-        Preprocessing   [Resize 299×299 · Normalize]
-               ↓
-        XceptionNet     [Pre-trained on ImageNet]
-               ↓
-        Grad-CAM        [Explainability Heatmap]
-               ↓
-        Prediction      [FAKE / REAL + Confidence]
-               ↓
-        Dashboard       [Analytics · PDF Report · History]
-        ```
-        """
+        <div style="text-align:center; color: var(--text-secondary); font-size:0.82rem; padding:1rem 0;">
+            🛡️ <b>DeepFake Detection AI</b> &nbsp;|&nbsp; Built with <b>TensorFlow</b> · <b>OpenCV</b> · <b>Streamlit</b> · <b>Grad-CAM</b><br>
+            <span style="opacity:0.7;">Explainable Neural Networks for Media Integrity Verification · Final Year Internship Project</span>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )

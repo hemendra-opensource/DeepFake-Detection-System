@@ -45,10 +45,20 @@ class FramePrediction:
 
 @dataclass
 class VideoPrediction:
-    """Aggregated DeepFake prediction result for an entire video."""
+    """
+    Aggregated DeepFake prediction result for an entire video.
+
+    All four probability/confidence fields are mathematically consistent:
+        real_probability + fake_probability == 1.0
+        confidence == fake_probability  if label == "FAKE"
+        confidence == real_probability  if label == "REAL"
+        confidence == probability of the PREDICTED class
+    """
 
     label: str                          # Final verdict: "FAKE" or "REAL"
     confidence: float                   # Confidence in the final verdict
+    fake_probability: float             # P(FAKE) ∈ [0, 1] - average of frames
+    real_probability: float             # P(REAL) = 1 − fake_probability
     fake_frame_count: int
     real_frame_count: int
     total_frames_analysed: int
@@ -58,6 +68,22 @@ class VideoPrediction:
     fps: float = 0.0
     duration_seconds: float = 0.0
     frame_predictions: List[FramePrediction] = field(default_factory=list)
+
+    def __post_init__(self) -> None:
+        """Enforce mathematical consistency for FAKE/REAL verdicts."""
+        if self.label in ("FAKE", "REAL"):
+            rp = round(self.real_probability, 6)
+            fp = round(self.fake_probability, 6)
+            if abs(rp + fp - 1.0) > 1e-4:
+                raise ValueError(
+                    f"Incoherent probabilities: real={rp} + fake={fp} = {rp + fp:.6f} ≠ 1.0"
+                )
+            expected_conf = fp if self.label == "FAKE" else rp
+            if abs(round(self.confidence, 6) - round(expected_conf, 6)) > 1e-4:
+                raise ValueError(
+                    f"Confidence {self.confidence:.6f} does not match predicted class "
+                    f"({self.label}) probability {expected_conf:.6f}"
+                )
 
     @property
     def fake_percentages(self) -> List[float]:
@@ -72,7 +98,8 @@ class VideoPrediction:
     def __str__(self) -> str:
         return (
             f"[{self.label}] confidence={self.confidence:.1%} "
-            f"fake={self.fake_frame_ratio:.1%} real={1-self.fake_frame_ratio:.1%} "
+            f"fake_prob={self.fake_probability:.4f} real_prob={self.real_probability:.4f} "
+            f"fake_ratio={self.fake_frame_ratio:.1%} "
             f"fake_frames={self.fake_frame_count}/{self.total_frames_analysed} "
             f"time={self.processing_time_ms:.0f}ms"
         )
@@ -176,10 +203,11 @@ class VideoDetector:
         fake_count = sum(1 for fp in frame_preds if fp.label == "FAKE")
         real_count = len(frame_preds) - fake_count
         fake_ratio = fake_count / len(frame_preds)
-
         result = VideoPrediction(
             label=verdict["label"],
             confidence=verdict["confidence"],
+            fake_probability=verdict["fake_probability"],
+            real_probability=verdict["real_probability"],
             fake_frame_count=fake_count,
             real_frame_count=real_count,
             total_frames_analysed=len(frame_preds),
@@ -244,7 +272,12 @@ class VideoDetector:
 
         label = "FAKE" if avg_fake_prob >= self.threshold else "REAL"
         confidence = avg_fake_prob if label == "FAKE" else avg_real_prob
-        return {"label": label, "confidence": confidence}
+        return {
+            "label": label,
+            "confidence": confidence,
+            "fake_probability": avg_fake_prob,
+            "real_probability": avg_real_prob,
+        }
 
     def _empty_prediction(
         self,
@@ -256,6 +289,8 @@ class VideoDetector:
         return VideoPrediction(
             label="UNKNOWN",
             confidence=0.0,
+            fake_probability=0.0,
+            real_probability=1.0,
             fake_frame_count=0,
             real_frame_count=0,
             total_frames_analysed=0,
