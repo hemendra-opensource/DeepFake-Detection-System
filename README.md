@@ -1,10 +1,6 @@
 <div align="center">
 
-<img src="assets/diagrams/workflow_overview.png" alt="DeepFake Detection System Workflow" width="100%"/>
-
-<br/>
-
-# 🧠 Explainable DeepFake Detection
+# Explainable DeepFake Detection
 ### Using XceptionNet · Grad-CAM · Frame-wise Video Analysis
 
 *A production-grade AI system for detecting manipulated media with visual explainability*
@@ -18,24 +14,24 @@
 [![OpenCV](https://img.shields.io/badge/OpenCV-4.9-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)](https://opencv.org)
 [![MediaPipe](https://img.shields.io/badge/MediaPipe-0.10-00A886?style=for-the-badge&logo=google&logoColor=white)](https://mediapipe.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
-[![XceptionNet](https://img.shields.io/badge/Model-XceptionNet-8A2BE2?style=for-the-badge&logo=neural-network&logoColor=white)]()
-[![Deep Learning](https://img.shields.io/badge/Deep_Learning-Transfer_Learning-0099CC?style=for-the-badge)]()
-[![Grad-CAM](https://img.shields.io/badge/XAI-Grad--CAM-success?style=for-the-badge)]()
-
-<br/>
-
-[🚀 Quick Start](#-installation-guide) · [📖 Documentation](#-project-overview) · [📊 Features](#-features) · [🏗️ Architecture](#️-system-workflow) · [📸 Dashboard Preview](#-dashboard-preview)
-
----
+[![Deep Learning](https://img.shields.io/badge/Deep_Learning-XceptionNet-8A2BE2?style=for-the-badge)]()
+[![XAI](https://img.shields.io/badge/XAI-Grad--CAM-22C55E?style=for-the-badge)]()
 
 </div>
 
-## 📋 Table of Contents
+---
+
+## Table of Contents
 
 - [Project Overview](#-project-overview)
 - [Features](#-features)
-- [System Workflow](#️-system-workflow)
-- [Tech Stack](#-tech-stack)
+- [System Workflows](#-system-workflows)
+  - [End-to-End System Workflow](#1️-end-to-end-system-workflow)
+  - [Training Pipeline](#2️-training-pipeline)
+  - [Batch Detection Workflow](#3️-batch-detection-workflow)
+  - [Report Generation Workflow](#4️-report-generation-workflow)
+  - [Performance Evaluation Pipeline](#5️-performance-evaluation-pipeline)
+- [Tech Stack](#️-tech-stack)
 - [Project Structure](#-project-structure)
 - [Installation Guide](#-installation-guide)
 - [Datasets](#-datasets)
@@ -49,207 +45,135 @@
 
 ---
 
-## 📖 Project Overview
-
-<details open>
-<summary><b>Click to expand</b></summary>
+## Project Overview
 
 ### What is a DeepFake?
 
-**DeepFake** refers to synthetic media — images, videos, or audio — in which a person's likeness is algorithmically swapped, altered, or fabricated using deep learning techniques such as **Generative Adversarial Networks (GANs)**, **autoencoders**, and **diffusion models**. The term is a portmanteau of "deep learning" and "fake."
+**DeepFake** refers to synthetic media — images, videos, or audio — in which a person's likeness is algorithmically swapped, altered, or fabricated using deep learning techniques such as **Generative Adversarial Networks (GANs)**, **autoencoders**, and **diffusion models**. Modern DeepFakes can produce hyper-realistic manipulations that are indistinguishable to the naked eye, posing serious threats to:
 
-Modern DeepFakes can produce hyper-realistic manipulations indistinguishable to the naked eye — posing serious threats to:
-- 🔐 **Identity theft and fraud**
-- 🗳️ **Political misinformation and propaganda**
-- 📰 **Fake news and media manipulation**
-- ⚖️ **Legal evidence tampering**
-- 🧒 **Non-consensual synthetic media (NCSM)**
+- **Identity theft and fraud**
+- **Political misinformation and propaganda**
+- **Fake news and media manipulation**
+- **Legal evidence tampering**
+- **Non-consensual synthetic media (NCSM)**
 
 ### Why is DeepFake Detection Critical?
 
-As generative AI advances exponentially, the volume and sophistication of synthetic media has outpaced human ability to detect it. Automated detection systems powered by deep learning are now essential infrastructure for:
+As generative AI advances exponentially, the volume and sophistication of synthetic media has outpaced human ability to detect it. Automated detection systems powered by deep learning are now essential infrastructure for social media platforms, governments, law enforcement, journalists, and organizations protecting public trust.
 
-- Social media platforms enforcing content integrity
-- Governments and law enforcement verifying media authenticity
-- Journalists and fact-checkers validating sources
-- Organizations protecting their executives from impersonation
+### Why Explainable AI — Grad-CAM?
 
-### Why Explainable AI (Grad-CAM)?
-
-Black-box AI models, while powerful, produce predictions without justification — critically limiting trust in high-stakes scenarios. This project integrates **Gradient-weighted Class Activation Mapping (Grad-CAM)** to generate visual heatmaps that highlight *exactly which facial regions* triggered the model's decision.
-
-This transforms the system from a binary classifier into a **transparent, auditable, and explainable AI tool** that satisfies both technical and non-technical stakeholders.
+Black-box AI models, while powerful, produce predictions without justification — critically limiting trust in high-stakes scenarios. This project integrates **Gradient-weighted Class Activation Mapping (Grad-CAM)** to generate visual heatmaps that highlight *exactly which facial regions* triggered the model's decision. This transforms the system from a binary classifier into a **transparent, auditable, and explainable AI tool**.
 
 ### Project Objectives
 
 | # | Objective |
 |---|-----------|
 | 1 | Build a production-grade DeepFake detection system using Transfer Learning on XceptionNet |
-| 2 | Implement Grad-CAM visual explainability for model predictions |
-| 3 | Support image, video (frame-wise), webcam, and batch detection pipelines |
+| 2 | Implement Grad-CAM visual explainability for all model predictions |
+| 3 | Support image, video (frame-wise), webcam live, and batch detection pipelines |
 | 4 | Provide a modern, interactive AI dashboard built with Streamlit |
-| 5 | Generate automated PDF/CSV detection reports with evidence |
-| 6 | Maintain complete detection history with SQLite persistence |
-| 7 | Ensure mathematically consistent confidence scores across all detection modes |
+| 5 | Generate automated PDF/CSV detection reports with evidence and Grad-CAM |
+| 6 | Maintain a complete detection history with SQLite persistence |
+| 7 | Enforce mathematically consistent confidence scores across all detection modes |
 
 ### Real-World Applications
 
-- 🏦 **KYC Verification** — Banks and fintech companies verifying customer identity
-- 🎬 **Media Integrity** — News agencies authenticating video content
-- 🔏 **Digital Forensics** — Legal investigation of manipulated evidence
-- 📱 **Social Platforms** — Automated content moderation at scale
-- 🎓 **Academic Research** — Benchmark evaluation of detection methods
-
-</details>
+| Domain | Application |
+|--------|-------------|
+| KYC Verification | Banks and fintech companies verifying customer identity |
+| Media Integrity | News agencies authenticating video content before publishing |
+| Digital Forensics | Legal investigation of potentially manipulated evidence |
+| Social Platforms | Automated content moderation at scale |
+| Academic Research | Benchmark evaluation of detection methods |
 
 <p align="right"><a href="#-table-of-contents">↑ Back to Top</a></p>
 
 ---
 
-## ✨ Features
-
-<details open>
-<summary><b>Click to expand</b></summary>
+## Features
 
 | # | Feature | Description |
 |---|---------|-------------|
-| ✅ | **Image DeepFake Detection** | Upload any image; face is automatically extracted, preprocessed, and classified |
-| ✅ | **Video DeepFake Detection** | Full video analysis with frame-by-frame inference and temporal aggregation |
-| ✅ | **Frame-wise Video Analysis** | Per-frame confidence timeline with visual frame gallery |
-| ✅ | **Explainable AI — Grad-CAM** | Heatmap overlay highlighting manipulated facial regions |
-| ✅ | **Confidence Score** | Mathematically consistent real/fake probability with confidence percentage |
-| ✅ | **Confidence Visualization** | Interactive gauge chart and probability bar charts via Plotly |
-| ✅ | **Webcam Detection** | Live real-time detection with auto-discovery of available camera indices |
-| ✅ | **Batch Detection** | Multi-file queue processing with progress tracking and summary export |
-| ✅ | **Detection History** | SQLite-backed history with search, filter, and export capabilities |
-| ✅ | **PDF Report Generation** | Automated professional PDF reports with Grad-CAM and metadata |
-| ✅ | **CSV Export** | Export batch or history results as structured CSV |
-| ✅ | **Modern Streamlit Dashboard** | SaaS-grade UI with glassmorphism, dark/light theme, and micro-animations |
-| ✅ | **Analytics Dashboard** | Session statistics, detection trends, and KPI cards |
-| ✅ | **Settings & Configuration** | Threshold, confidence, and UI preferences |
-| ✅ | **Responsive UI** | Adaptive layout for different screen sizes |
-
-</details>
+| | **Image DeepFake Detection** | Upload any image; face is automatically extracted, preprocessed, and classified |
+| | **Video DeepFake Detection** | Full video analysis with frame-by-frame inference and temporal aggregation |
+| | **Frame-wise Video Analysis** | Per-frame confidence timeline with visual frame gallery |
+| | **Explainable AI — Grad-CAM** | Heatmap overlay highlighting the specific facial regions that triggered detection |
+| | **Confidence Score** | Mathematically consistent real/fake probability with confidence percentage |
+| | **Confidence Visualization** | Interactive gauge chart and probability bar charts via Plotly |
+| | **Webcam Detection** | Live real-time detection with auto-discovery of available camera indices |
+| | **Batch Detection** | Multi-file queue processing with progress tracking and summary export |
+| | **Detection History** | SQLite-backed history with search, filter, and export capabilities |
+| | **PDF Report Generation** | Automated professional PDF reports with Grad-CAM and metadata |
+| | **CSV Export** | Export batch or history results as structured CSV |
+| | **Modern Streamlit Dashboard** | SaaS-grade UI with glassmorphism, dark/light theme, and micro-animations |
+| | **Analytics Dashboard** | Session statistics, detection trends, and KPI cards |
+| | **Settings & Configuration** | Threshold, confidence, and UI preferences |
+| | **Responsive UI** | Adaptive layout optimized for different screen sizes |
 
 <p align="right"><a href="#-table-of-contents">↑ Back to Top</a></p>
 
 ---
 
-## 🏗️ System Workflow
+## System Workflows
 
-<details open>
-<summary><b>End-to-End Detection Pipeline</b></summary>
+This section documents every major pipeline in the system using architectural diagrams created for this project.
 
-<br/>
+---
 
-<div align="center">
-<img src="assets/diagrams/workflow_overview.png" alt="End-to-End System Workflow" width="100%"/>
-<br/><em>Figure 1 — End-to-End DeepFake Detection System Workflow</em>
-</div>
+### 1️ End-to-End System Workflow
 
-<br/>
+<p align="center">
+  <img src="assets/workflows/system_workflow.png" width="960" alt="End-to-End System Workflow"/>
+</p>
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                     USER INPUT                                   │
-│            Image · Video · Webcam · Batch Upload                │
-└──────────────────────────┬──────────────────────────────────────┘
-                           ↓
-┌──────────────────────────────────────────────────────────────────┐
-│                   INPUT VALIDATION                               │
-│         Format Check · File Size · Type Verification            │
-└──────────────────────────┬──────────────────────────────────────┘
-                           ↓
-┌──────────────────────────────────────────────────────────────────┐
-│                   FACE DETECTION                                 │
-│           MediaPipe · Bounding Box · Alignment                  │
-└──────────────────────────┬──────────────────────────────────────┘
-                           ↓
-┌──────────────────────────────────────────────────────────────────┐
-│                 IMAGE PREPROCESSING                              │
-│     Crop · Resize 224×224 · Normalize · BGR→RGB               │
-└──────────────────────────┬──────────────────────────────────────┘
-                           ↓
-┌──────────────────────────────────────────────────────────────────┐
-│               XCEPTIONNET INFERENCE                              │
-│    Pretrained Weights · Feature Extraction · Softmax Output     │
-└─────────────┬────────────────────────────┬───────────────────────┘
-              ↓                            ↓
-┌─────────────────────────┐   ┌────────────────────────────────────┐
-│     PREDICTION ENGINE   │   │        GRAD-CAM ENGINE             │
-│  Real / Fake · Prob · CI│   │  Gradient Map · Heatmap · Overlay  │
-└─────────────┬───────────┘   └────────────────┬───────────────────┘
-              └──────────────┬─────────────────┘
-                             ↓
-┌──────────────────────────────────────────────────────────────────┐
-│                  ANALYTICS & RESULTS                             │
-│       Dashboard · KPI Cards · Charts · Frame Timeline           │
-└──────────────────────────┬──────────────────────────────────────┘
-                           ↓
-┌──────────────────────────────────────────────────────────────────┐
-│               PERSISTENCE & REPORTING                            │
-│     SQLite History · PDF Report · CSV Export · Download         │
-└──────────────────────────────────────────────────────────────────┘
-```
+**Overview:** The complete end-to-end flow from raw user input to final prediction and reporting. The pipeline begins with user input (image, video, webcam, or batch upload) which is validated and passed through OpenCV preprocessing. MediaPipe detects and extracts the face region, which is resized and normalized before being fed to the XceptionNet inference engine. The model simultaneously produces a prediction score and activates the Grad-CAM engine to generate a visual heatmap. Results are rendered on the Analytics Dashboard, persisted to the SQLite history database, and made available as a downloadable PDF/CSV report.
 
-</details>
+---
 
-<details>
-<summary><b>Training Pipeline</b></summary>
+### 2️ Training Pipeline
 
-<br/>
+<p align="center">
+  <img src="assets/workflows/training_pipeline.png" width="960" alt="Deep Learning Training Pipeline"/>
+</p>
 
-<div align="center">
-<img src="assets/diagrams/training_pipeline.png" alt="Training Pipeline" width="100%"/>
-<br/><em>Figure 2 — Deep Learning Training Pipeline: DeepFake Detection with XceptionNet</em>
-</div>
+**Overview:** The XceptionNet model is trained on a merged dataset drawn from three industry-standard benchmarks: **FaceForensics++**, **Celeb-DF**, and **DFDC**. The pipeline begins with face detection and extraction across all video frames, followed by normalization and a 70/15/15 train/validation/test split. Data augmentation (rotation, flipping, zoom) is applied to the training set to improve generalization. XceptionNet is then trained using a **progressive unfreezing** strategy — the backbone is initially frozen for fast convergence, then partially unfrozen for fine-tuning. The best checkpoint is selected based on validation AUC and exported in `.h5`, `.pb`, and TFLite formats.
 
-</details>
+---
 
-<details>
-<summary><b>Batch Detection Workflow</b></summary>
+### 3️ Batch Detection Workflow
 
-<br/>
+<p align="center">
+  <img src="assets/workflows/batch_workflow.png" width="960" alt="Batch Detection Workflow"/>
+</p>
 
-<div align="center">
-<img src="assets/diagrams/batch_workflow.png" alt="Batch Detection Workflow" width="100%"/>
-<br/><em>Figure 3 — Batch DeepFake Detection Workflow</em>
-</div>
+**Overview:** The batch processing pipeline accepts multiple image and video files simultaneously, creating a prioritized processing queue. Each file is processed one-by-one through the standard pipeline: face detection via MediaPipe → image preprocessing (crop, resize to 224×224, normalize) → XceptionNet inference → confidence score output. Results are accumulated into an aggregated detection table displayed in the dashboard. Upon completion, the full batch summary is available as a downloadable CSV export and as a comprehensive PDF detection report.
 
-</details>
+---
 
-<details>
-<summary><b>Report Generation Workflow</b></summary>
+### 4️ Report Generation Workflow
 
-<br/>
+<p align="center">
+  <img src="assets/workflows/report_workflow.png" width="960" alt="Report Generation Workflow"/>
+</p>
 
-<div align="center">
-<img src="assets/diagrams/report_workflow.png" alt="Report Generation Workflow" width="100%"/>
-<br/><em>Figure 4 — Automatic Report Generation Workflow</em>
-</div>
+**Overview:** After each detection or batch run, the report generation engine compiles a professional PDF document. The workflow collects completed detection results from the SQLite history database, generates confidence charts (bar, donut, gauge), attaches Grad-CAM heatmap images as visual evidence, and formats everything using ReportLab into a structured report. The report and accompanying CSV are stored with their paths logged in the database, making them accessible via the Reports page for download at any time. This provides a full audit trail from detection to documented evidence.
 
-</details>
+---
 
-<details>
-<summary><b>Performance Evaluation Pipeline</b></summary>
+### 5️ Performance Evaluation Pipeline
 
-<br/>
+<p align="center">
+  <img src="assets/workflows/metrics_pipeline.png" width="960" alt="Performance Evaluation Pipeline"/>
+</p>
 
-<div align="center">
-<img src="assets/diagrams/metrics_pipeline.png" alt="Performance Metrics Pipeline" width="100%"/>
-<br/><em>Figure 5 — Model Evaluation and Performance Metrics Pipeline</em>
-</div>
-
-</details>
+**Overview:** The model evaluation pipeline runs against the held-out test set that was never seen during training. Predictions are collected from XceptionNet and passed through the metrics engine which computes: **Accuracy** (overall correctness), **Precision** (TP / TP+FP), **Recall** (TP / TP+FN), **F1 Score** (harmonic mean), **Confusion Matrix** (TP/FP/TN/FN breakdown), **ROC Curve** and **AUC Score**. The evaluation system also supports **PPC (Probability-Calibrated Prediction)** analysis to ensure confidence scores are well-calibrated against actual outcomes.
 
 <p align="right"><a href="#-table-of-contents">↑ Back to Top</a></p>
 
 ---
 
-## 🛠️ Tech Stack
-
-<details open>
-<summary><b>Click to expand</b></summary>
+## Tech Stack
 
 | Layer | Technology | Version | Purpose |
 |-------|-----------|---------|---------|
@@ -259,12 +183,12 @@ This transforms the system from a binary classifier into a **transparent, audita
 | **Neural Network API** | Keras | 2.15.0 | High-level model construction |
 | **Computer Vision** | OpenCV | 4.9.0.80 | Frame extraction, webcam, image ops |
 | **Face Detection** | MediaPipe | 0.10.14 | Real-time face landmark detection |
-| **Model Architecture** | XceptionNet | — | Transfer learning backbone |
+| **Model Architecture** | XceptionNet | — | Transfer learning backbone (ImageNet) |
 | **Explainability** | Grad-CAM | — | Visual explanation heatmaps |
 | **Visualization** | Plotly | 5.22.0 | Interactive charts and gauges |
-| **Visualization** | Matplotlib | 3.8.4 | Heatmap rendering |
+| **Visualization** | Matplotlib | 3.8.4 | Heatmap and static plot rendering |
 | **Visualization** | Seaborn | 0.13.2 | Statistical plotting |
-| **Data Processing** | NumPy | 1.26.4 | Array & matrix operations |
+| **Data Processing** | NumPy | 1.26.4 | Array and matrix operations |
 | **Data Processing** | Pandas | 2.2.2 | Tabular data handling |
 | **ML Utilities** | Scikit-learn | 1.4.2 | Metrics, calibration, splitting |
 | **Image Processing** | Pillow | 10.3.0 | Image I/O and manipulation |
@@ -276,16 +200,11 @@ This transforms the system from a binary classifier into a **transparent, audita
 | **Progress** | tqdm | 4.66.4 | CLI progress bars |
 | **Dataset Access** | Kaggle API | 1.6.12 | Dataset downloading |
 
-</details>
-
 <p align="right"><a href="#-table-of-contents">↑ Back to Top</a></p>
 
 ---
 
-## 📁 Project Structure
-
-<details open>
-<summary><b>Click to expand</b></summary>
+## Project Structure
 
 ```
 DFDC/
@@ -293,7 +212,7 @@ DFDC/
     │
     ├── 📄 app.py                        # Main Streamlit application entry point
     ├── 📄 train.py                      # Model training entry point
-    ├── 📄 requirements.txt              # Python dependencies
+    ├── 📄 requirements.txt              # Python dependencies (pinned)
     ├── 📄 run.bat                       # Windows quick-launch script
     ├── 📄 README.md                     # Project documentation
     │
@@ -308,15 +227,15 @@ DFDC/
     │   │   ├── history.py               # Detection history & search
     │   │   ├── analytics.py             # Analytics dashboard
     │   │   ├── settings.py              # App configuration
-    │   │   └── about.py                 # Project info
+    │   │   └── about.py                 # Project information
     │   ├── 📁 components/               # Reusable UI components
     │   │   ├── kpi_cards.py             # Animated KPI metric cards
     │   │   ├── charts.py                # Plotly chart components
     │   │   ├── gradcam_viewer.py        # Grad-CAM heatmap viewer
     │   │   ├── loader.py                # Animated loading components
     │   │   └── sidebar.py               # Navigation sidebar
-    │   └── 📁 static/                   # Static assets
-    │       └── style.css                # Global CSS (glassmorphism theme)
+    │   └── 📁 static/
+    │       └── style.css                # Global CSS (glassmorphism + dark theme)
     │
     ├── 📁 inference/                    # Core detection engine
     │   ├── image_detector.py            # Image detection pipeline
@@ -324,8 +243,8 @@ DFDC/
     │
     ├── 📁 models/                       # Model architecture definitions
     │   ├── xceptionnet.py               # XceptionNet architecture
-    │   ├── efficientnet.py              # EfficientNet (alternative)
-    │   ├── resnet50.py                  # ResNet50 (alternative)
+    │   ├── efficientnet.py              # EfficientNet (alternative backbone)
+    │   ├── resnet50.py                  # ResNet50 (alternative backbone)
     │   └── model_factory.py             # Model loading & factory
     │
     ├── 📁 gradcam/                      # Explainability module
@@ -340,7 +259,7 @@ DFDC/
     ├── 📁 training/                     # Model training modules
     │   ├── trainer.py                   # Standard training loop
     │   ├── progressive_trainer.py       # Progressive unfreezing trainer
-    │   └── data_loader.py               # TF Dataset loading
+    │   └── data_loader.py               # TensorFlow Dataset loading
     │
     ├── 📁 evaluation/                   # Model evaluation
     │   ├── evaluator.py                 # Evaluation orchestrator
@@ -356,33 +275,43 @@ DFDC/
     │   ├── schema.py                    # SQLite schema definition
     │   └── repository.py                # CRUD operations & queries
     │
-    ├── 📁 configs/                      # Configuration files
-    ├── 📁 assets/                       # Static assets & diagrams
-    │   └── diagrams/                    # Workflow diagram images
+    ├── 📁 assets/                       # Static assets
+    │   ├── 📁 workflows/                # Architecture & workflow diagrams
+    │   │   ├── system_workflow.png
+    │   │   ├── training_pipeline.png
+    │   │   ├── batch_workflow.png
+    │   │   ├── report_workflow.png
+    │   │   └── metrics_pipeline.png
+    │   └── 📁 screenshots/              # Application screenshots
+    │       ├── home.png
+    │       ├── image_detection.png
+    │       ├── video_detection.png
+    │       ├── webcam.png
+    │       ├── batch_detection.png
+    │       ├── reports.png
+    │       ├── history.png
+    │       └── analytics.png
+    │
+    ├── 📁 configs/                      # YAML configuration files
     ├── 📁 data/                         # Raw & processed datasets
     ├── 📁 outputs/                      # Model checkpoints & exports
     ├── 📁 logs/                         # Training & application logs
-    ├── 📁 scripts/                      # Utility scripts
+    ├── 📁 scripts/                      # Utility & test scripts
     └── 📁 tests/                        # Unit & integration tests
 ```
-
-</details>
 
 <p align="right"><a href="#-table-of-contents">↑ Back to Top</a></p>
 
 ---
 
-## 🚀 Installation Guide
-
-<details open>
-<summary><b>Click to expand</b></summary>
+## Installation Guide
 
 ### Prerequisites
 
-- Python **3.11.x** (recommended; `python --version` to check)
-- pip **23+** or `conda`
-- Webcam (optional, for live detection)
-- GPU with CUDA (optional, for faster training; CPU supported)
+- **Python 3.11.x** — `python --version` to verify
+- **pip 23+** — `pip --version` to verify
+- Webcam *(optional — for live detection only)*
+- GPU with CUDA *(optional — CPU inference fully supported)*
 
 ---
 
@@ -418,23 +347,23 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-> **Note:** All dependencies are pinned in `requirements.txt` for reproducibility. TensorFlow 2.15.1 runs on CPU by default; GPU support requires a compatible CUDA installation.
+> **Note:** All dependencies are version-pinned in `requirements.txt` for full reproducibility. TensorFlow 2.15.1 runs on CPU by default. GPU support requires a compatible CUDA 11.8+ installation.
 
 ---
 
 ### Step 4 — Run the Application
 
-**Using the launcher script (Windows):**
+**Windows quick launch:**
 ```powershell
 .\run.bat
 ```
 
-**Using Streamlit directly:**
+**Manual launch:**
 ```bash
 streamlit run app.py
 ```
 
-The dashboard will open automatically at `http://localhost:8501`
+The dashboard opens automatically at **http://localhost:8501**
 
 ---
 
@@ -444,375 +373,286 @@ The dashboard will open automatically at `http://localhost:8501`
 python train.py
 ```
 
-> Configure training parameters in `configs/` before running. Pre-trained weights can be placed in `outputs/` and will be auto-loaded by the model factory.
-
-</details>
+> Configure training parameters in `configs/` before running. Pre-trained weights should be placed in `outputs/` — they will be auto-discovered by the model factory.
 
 <p align="right"><a href="#-table-of-contents">↑ Back to Top</a></p>
 
 ---
 
-## 📦 Datasets
+## Datasets
 
-<details>
-<summary><b>Click to expand</b></summary>
+This project was designed and evaluated against the three most widely-used DeepFake datasets in academic research:
 
-This project was designed and evaluated against the three most widely used and rigorously curated DeepFake datasets in academic research:
-
-| Dataset | Publisher | Size | Manipulation Types | Access |
-|---------|-----------|------|--------------------|--------|
-| **FaceForensics++** | TU Munich | ~1.5M frames | Face swap, face reenactment, neural textures | [Request Access](https://github.com/ondyari/FaceForensics) |
+| Dataset | Publisher | Scale | Manipulation Types | Access |
+|---------|-----------|-------|--------------------|--------|
+| **FaceForensics++** | TU Munich | ~1.5M frames | Face swap, reenactment, neural textures | [Request Access](https://github.com/ondyari/FaceForensics) |
 | **Celeb-DF** | Stevens Institute | ~590K frames | High-quality celebrity face swaps | [GitHub](https://github.com/yuezunli/celeb-deepfakeforensics) |
-| **DFDC** (DeepFake Detection Challenge) | Meta AI / Kaggle | ~119K videos | Multi-modal, diverse demographics | [Kaggle](https://www.kaggle.com/c/deepfake-detection-challenge) |
+| **DFDC** | Meta AI | ~119K videos | Multi-modal, diverse demographics | [Kaggle](https://www.kaggle.com/c/deepfake-detection-challenge) |
 
-### Why These Datasets?
-
-- **FaceForensics++** — Gold-standard benchmark with multiple forgery methods at varying compression levels; enables controlled evaluation across manipulation types.
-- **Celeb-DF** — High-quality visual fidelity that challenges detectors trained on lower-quality fakes; tests generalization.
-- **DFDC** — Largest and most demographically diverse dataset; created by Meta to specifically stress-test detection systems at production scale.
+**Why these three?**
+- **FaceForensics++** is the gold-standard benchmark with multiple forgery methods at varying compression levels, enabling controlled evaluation across manipulation types.
+- **Celeb-DF** contains high visual-fidelity fakes that challenge detectors trained on lower-quality data, testing generalization to better forgeries.
+- **DFDC** is the largest and most demographically diverse dataset, created by Meta specifically to stress-test detection systems at production scale.
 
 ### Data Pipeline
 
 ```
-Raw Videos → Frame Extraction → Face Detection (MediaPipe) 
-          → Face Alignment → Crop & Resize (224×224)
-          → Normalize → Train/Val/Test Split (70/15/15)
+Raw Videos
+  → Frame Extraction (OpenCV)
+  → Face Detection (MediaPipe)
+  → Face Alignment & Crop
+  → Resize to 224×224
+  → Normalize (ImageNet mean/std)
+  → Train / Validation / Test Split  (70% / 15% / 15%)
 ```
-
-</details>
 
 <p align="right"><a href="#-table-of-contents">↑ Back to Top</a></p>
 
 ---
 
-## 🧠 Model Details
+## Model Details
 
-<details open>
-<summary><b>Click to expand</b></summary>
+### Architecture — XceptionNet
 
-### Architecture: XceptionNet
-
-**Xception** (Extreme Inception) is a convolutional neural network architecture introduced by François Chollet (Google) in 2017. It replaces standard convolutions with **depthwise separable convolutions**, dramatically improving parameter efficiency while maintaining representational power.
+**Xception** (Extreme Inception) was introduced by François Chollet (Google) in 2017. It replaces standard convolutions with **depthwise separable convolutions**, dramatically improving parameter efficiency while retaining strong representational power. It is state-of-the-art for image-level binary classification tasks and is the preferred backbone for DeepFake detection research.
 
 | Parameter | Value |
 |-----------|-------|
 | Base Architecture | Xception (ImageNet pretrained) |
 | Input Shape | 224 × 224 × 3 |
-| Backbone Layers | 71 layers (frozen during phase 1) |
-| Classification Head | GlobalAveragePooling → Dense(256, ReLU) → Dropout(0.3) → Dense(1, Sigmoid) |
-| Task | Binary Classification (Real / Fake) |
+| Backbone | 71 layers (frozen in Phase 1) |
+| Classification Head | GAP → Dense(256, ReLU) → Dropout(0.3) → Dense(1, Sigmoid) |
+| Task | Binary Classification — Real vs. Fake |
 | Loss Function | Binary Cross-Entropy |
-| Optimizer | Adam (lr=1e-4, phase 1) / SGD (lr=1e-5, phase 2) |
+| Optimizer | Adam (lr=1e-4, Phase 1) → SGD (lr=1e-5, Phase 2) |
 | Output | Probability ∈ [0, 1] — Fake likelihood |
 
-### Transfer Learning Strategy
-
-Training proceeds in two phases using **progressive unfreezing**:
+### Transfer Learning Strategy — Progressive Unfreezing
 
 ```
-Phase 1 (Feature Extraction)
-  ├── Backbone: FROZEN (ImageNet weights preserved)
-  ├── Head: TRAINED (task-specific layers)
-  └── Epochs: 10-20, LR: 1e-4
+Phase 1 — Feature Extraction
+  ├── Backbone:  FROZEN  (pretrained ImageNet weights preserved)
+  ├── Head:      TRAINED (task-specific classification layers)
+  └── Purpose:   Fast convergence without destroying pretrained features
 
-Phase 2 (Fine-Tuning)
-  ├── Backbone: PARTIALLY UNFROZEN (top layers)
-  ├── Head: CONTINUED TRAINING
-  └── Epochs: 5-10, LR: 1e-5 (reduced to prevent catastrophic forgetting)
+Phase 2 — Fine-Tuning
+  ├── Backbone:  TOP LAYERS UNFROZEN
+  ├── Head:      CONTINUED TRAINING
+  └── Purpose:   Domain adaptation to DeepFake artifacts at a low LR
 ```
 
-### Explainability: Grad-CAM
+### Explainability — Grad-CAM
 
-**Gradient-weighted Class Activation Mapping (Grad-CAM)** computes the gradient of the class prediction score with respect to the final convolutional feature map. The resulting heatmap localizes which regions most contributed to the model's decision.
+**Gradient-weighted Class Activation Mapping (Grad-CAM)** computes the gradient of the class prediction score with respect to the final convolutional feature map. The resulting heatmap localizes which facial regions most influenced the model's decision.
 
 ```
-Grad-CAM Algorithm:
-  1. Forward pass → obtain class score ŷ
+Algorithm:
+  1. Forward pass → obtain fake probability score ŷ
   2. Backward pass → compute ∂ŷ/∂Aᵏ for each feature map Aᵏ
   3. Global Average Pool the gradients → αᵏ (importance weights)
-  4. Weighted combination: Lcam = ReLU(Σ αᵏ · Aᵏ)
-  5. Upsample to input resolution
+  4. Weighted sum:  L_cam = ReLU( Σ αᵏ · Aᵏ )
+  5. Upsample to input resolution (224×224)
   6. Overlay as heatmap (jet colormap) on original image
 ```
 
-**Interpretation:**
-- 🔴 **Hot regions (red/yellow)** — Areas driving the "FAKE" prediction (e.g., eye boundaries, chin edges, blending artifacts)
-- 🔵 **Cool regions (blue/dark)** — Areas with low influence on the decision
+**Heatmap interpretation:**
+- **Hot regions (red/yellow)** — Facial areas driving the fake prediction (blending seams, edge artifacts, unnatural textures)
+- **Cool regions (blue/dark)** — Areas with minimal influence on the decision
 
-### Confidence Score (Mathematically Consistent)
+### Confidence Score — Mathematical Consistency
 
-The system enforces strict mathematical consistency:
+The system enforces strict invariants to eliminate contradictory predictions:
 
-```
-fake_prob   = model_output         ∈ [0, 1]
-real_prob   = 1 - fake_prob        ∈ [0, 1]
+```python
+fake_prob   = model_output           # ∈ [0, 1]
+real_prob   = 1.0 - fake_prob        # ∈ [0, 1]
 prediction  = "FAKE" if fake_prob > threshold else "REAL"
-confidence  = prob_of_predicted_class × 100%
+confidence  = max(fake_prob, real_prob) * 100  # always = prob of predicted class
 
-# Invariants enforced:
-# ✅ fake_prob + real_prob == 1.0
-# ✅ confidence == max(fake_prob, real_prob) × 100
-# ✅ Never: "Prediction: REAL, Real Probability: 9%"
+# Invariants always satisfied:
+#  fake_prob + real_prob == 1.0
+#  confidence == prob_of_predicted_class × 100
+#  "Prediction: REAL" only when real_prob > fake_prob
 ```
-
-</details>
 
 <p align="right"><a href="#-table-of-contents">↑ Back to Top</a></p>
 
 ---
 
-## 📸 Dashboard Preview
+## Dashboard Preview
 
-> **📌 Note for maintainer:** Replace the placeholder sections below with actual application screenshots when available. Use the format shown for consistency.
-
-<details open>
-<summary><b>Workflow Diagrams</b></summary>
-
-<br/>
-
-<div align="center">
-
-| Pipeline | Diagram |
-|----------|---------|
-| End-to-End System | ![System Workflow](assets/diagrams/workflow_overview.png) |
-| Training Pipeline | ![Training Pipeline](assets/diagrams/training_pipeline.png) |
-| Batch Processing | ![Batch Workflow](assets/diagrams/batch_workflow.png) |
-| Report Generation | ![Report Workflow](assets/diagrams/report_workflow.png) |
-| Model Evaluation | ![Metrics Pipeline](assets/diagrams/metrics_pipeline.png) |
-
-</div>
-
-</details>
-
-<details>
-<summary><b>Application Screenshots</b></summary>
-
-<br/>
+The following sections showcase the application's modern SaaS-grade UI. Screenshots will be updated continuously as the dashboard evolves.
 
 ---
 
-#### 🏠 Home Dashboard
+### Home Dashboard
 
-<!-- SCREENSHOT PLACEHOLDER: Home Dashboard -->
-<!-- Insert: A full-width screenshot of the home/landing page showing KPI cards, session stats, and navigation. -->
-<!-- File naming convention: assets/screenshots/home_dashboard.png -->
-<!-- Caption: "Home Dashboard — KPI overview, session statistics, and navigation sidebar" -->
+<p align="center">
+  <img src="assets/screenshots/home.png" width="960" alt="Home Dashboard"/>
+</p>
 
-```
-[ HOME DASHBOARD SCREENSHOT ]
-File: assets/screenshots/home_dashboard.png
-Caption: Home Dashboard — Real-time KPI cards and session overview
-```
+> Screenshot will be added. Place `assets/screenshots/home.png` to activate.
+
+The **Home Dashboard** serves as the central hub of the application, displaying real-time KPI cards (total detections, fake rate, average confidence, reports generated), session statistics, a detection verdict timeline chart, and quick-access navigation to all modules. Designed with glassmorphism cards on a dark `#0F172A` background.
 
 ---
 
-#### 🖼️ Image Detection
+### Image Detection
 
-<!-- SCREENSHOT PLACEHOLDER: Image Detection Page -->
-<!-- Insert: Screenshot showing an uploaded image, face bounding box, prediction badge (REAL/FAKE), confidence gauge, and Grad-CAM overlay. -->
-<!-- File naming convention: assets/screenshots/image_detection.png -->
+<p align="center">
+  <img src="assets/screenshots/image_detection.png" width="960" alt="Image Detection"/>
+</p>
 
-```
-[ IMAGE DETECTION SCREENSHOT ]
-File: assets/screenshots/image_detection.png
-Caption: Image Detection — Uploaded image, prediction badge, confidence score, and Grad-CAM heatmap
-```
+> Screenshot will be added. Place `assets/screenshots/image_detection.png` to activate.
+
+The **Image Detection** page allows users to upload any face image. The system automatically detects and crops the face region using MediaPipe, runs XceptionNet inference, and displays the result with a styled REAL/FAKE verdict badge, an interactive Plotly confidence gauge, a real/fake probability breakdown bar, and a side-by-side Grad-CAM heatmap overlay showing exactly which facial regions triggered the prediction.
 
 ---
 
-#### 🎬 Video Detection
+### Video Detection
 
-<!-- SCREENSHOT PLACEHOLDER: Video Detection Page -->
-<!-- Insert: Screenshot showing frame-wise analysis timeline, overall verdict, frame gallery with individual confidences. -->
-<!-- File naming convention: assets/screenshots/video_detection.png -->
+<p align="center">
+  <img src="assets/screenshots/video_detection.png" width="960" alt="Video Detection"/>
+</p>
 
-```
-[ VIDEO DETECTION SCREENSHOT ]
-File: assets/screenshots/video_detection.png
-Caption: Video Detection — Frame-wise analysis timeline and aggregate verdict
-```
+> Screenshot will be added. Place `assets/screenshots/video_detection.png` to activate.
+
+The **Video Detection** page processes uploaded video files frame-by-frame. Each extracted frame undergoes the full face detection → preprocessing → XceptionNet inference pipeline. Results are aggregated into an overall verdict using majority voting across frames. The page displays a frame-wise confidence timeline chart, a frame gallery with per-frame badges, an overall confidence gauge, and a detailed statistics summary.
 
 ---
 
-#### 🔥 Grad-CAM Explainability
+### Grad-CAM Explainability
 
-<!-- SCREENSHOT PLACEHOLDER: Grad-CAM Visualization -->
-<!-- Insert: Side-by-side comparison of original face and Grad-CAM heatmap overlay. -->
-<!-- File naming convention: assets/screenshots/gradcam_visualization.png -->
+<p align="center">
+  <img src="assets/screenshots/gradcam.png" width="960" alt="Grad-CAM Explainability"/>
+</p>
 
-```
-[ GRAD-CAM SCREENSHOT ]
-File: assets/screenshots/gradcam_visualization.png
-Caption: Grad-CAM Explainability — Heatmap overlay identifying manipulated facial regions
-```
+> Screenshot will be added. Place `assets/screenshots/gradcam.png` to activate.
+
+The **Grad-CAM Viewer** presents a side-by-side comparison of the original face image and the Grad-CAM heatmap overlay. Hot regions (red/yellow) highlight the exact facial features — typically blending boundaries, eye regions, or unnatural texture transitions — that the model identified as indicators of manipulation. This visual evidence provides interpretable, human-readable justification for every prediction.
 
 ---
 
-#### 📷 Webcam Detection
+### Webcam Detection
 
-<!-- SCREENSHOT PLACEHOLDER: Webcam Detection Page -->
-<!-- Insert: Screenshot of live webcam feed with bounding box, real-time confidence score, FPS counter, and REAL/FAKE badge. -->
-<!-- File naming convention: assets/screenshots/webcam_detection.png -->
+<p align="center">
+  <img src="assets/screenshots/webcam.png" width="960" alt="Webcam Detection"/>
+</p>
 
-```
-[ WEBCAM DETECTION SCREENSHOT ]
-File: assets/screenshots/webcam_detection.png
-Caption: Webcam Detection — Live real-time detection with FPS display and confidence overlay
-```
+> Screenshot will be added. Place `assets/screenshots/webcam.png` to activate.
+
+The **Webcam Detection** module provides live real-time DeepFake analysis directly from the user's camera. The system auto-discovers available camera indices (0, 1, 2, 3) and selects the first working device. It displays a live video feed with MediaPipe face bounding boxes, a live REAL/FAKE confidence badge overlaid on the frame, FPS counter, processing time, and handles camera resource cleanup gracefully on session end.
 
 ---
 
-#### 📦 Batch Detection
+### Batch Detection
 
-<!-- SCREENSHOT PLACEHOLDER: Batch Detection Page -->
-<!-- Insert: Screenshot showing multi-file upload queue, progress bar, results table with verdicts, and CSV export button. -->
-<!-- File naming convention: assets/screenshots/batch_detection.png -->
+<p align="center">
+  <img src="assets/screenshots/batch_detection.png" width="960" alt="Batch Detection"/>
+</p>
 
-```
-[ BATCH DETECTION SCREENSHOT ]
-File: assets/screenshots/batch_detection.png
-Caption: Batch Detection — Multi-file processing queue with aggregated results and CSV export
-```
+> Screenshot will be added. Place `assets/screenshots/batch_detection.png` to activate.
+
+The **Batch Detection** page accepts multiple image and video files simultaneously and processes them in a prioritized queue. A live progress bar tracks processing status for each file. Upon completion, an aggregated results table shows filename, verdict, confidence score, and processing time for every file. The complete batch summary is exportable as a structured **CSV** and a detailed **PDF report** via one-click download.
 
 ---
 
-#### 📄 PDF Reports
+### PDF Reports
 
-<!-- SCREENSHOT PLACEHOLDER: Reports Page -->
-<!-- Insert: Screenshot of the reports page showing detection history list, generate/download PDF buttons, and report preview. -->
-<!-- File naming convention: assets/screenshots/reports_page.png -->
+<p align="center">
+  <img src="assets/screenshots/reports.png" width="960" alt="PDF Reports"/>
+</p>
 
-```
-[ REPORTS SCREENSHOT ]
-File: assets/screenshots/reports_page.png
-Caption: Report Generation — Automated PDF reports with detection evidence and Grad-CAM
-```
+> Screenshot will be added. Place `assets/screenshots/reports.png` to activate.
+
+The **Reports** page compiles professional PDF detection reports on demand. Each report includes: detection metadata (filename, timestamp, model version), confidence charts, Grad-CAM heatmap images as visual forensic evidence, and a summary verdict. Reports are stored with paths logged in the SQLite database, making them persistently downloadable. CSV export is also available for integration with external tools.
 
 ---
 
-#### 🕘 Detection History
+### Detection History
 
-<!-- SCREENSHOT PLACEHOLDER: Detection History Page -->
-<!-- Insert: Screenshot of history page with searchable table, filter dropdowns, date range selector, and export controls. -->
-<!-- File naming convention: assets/screenshots/detection_history.png -->
+<p align="center">
+  <img src="assets/screenshots/history.png" width="960" alt="Detection History"/>
+</p>
 
-```
-[ DETECTION HISTORY SCREENSHOT ]
-File: assets/screenshots/detection_history.png
-Caption: Detection History — SQLite-backed searchable and filterable detection log
-```
+> Screenshot will be added. Place `assets/screenshots/history.png` to activate.
+
+The **Detection History** page presents a searchable, filterable log of every detection run by the application, persisted in an SQLite database. Users can filter by verdict (REAL/FAKE), date range, confidence threshold, and media type. Individual records can be expanded to view Grad-CAM images. The full history is exportable as a CSV, and any record can trigger a new PDF report generation.
 
 ---
 
-#### 📊 Analytics Dashboard
+### Analytics Dashboard
 
-<!-- SCREENSHOT PLACEHOLDER: Analytics Page -->
-<!-- Insert: Screenshot showing detection trend charts, real/fake ratio donut, confidence distribution histogram, and session KPIs. -->
-<!-- File naming convention: assets/screenshots/analytics_dashboard.png -->
+<p align="center">
+  <img src="assets/screenshots/analytics.png" width="960" alt="Analytics Dashboard"/>
+</p>
 
-```
-[ ANALYTICS DASHBOARD SCREENSHOT ]
-File: assets/screenshots/analytics_dashboard.png
-Caption: Analytics Dashboard — Detection trends, confidence distributions, and session KPIs
-```
+> Screenshot will be added. Place `assets/screenshots/analytics.png` to activate.
 
----
-
-> **To add screenshots:**
-> 1. Take screenshots of the running application
-> 2. Save them in `assets/screenshots/` with the filenames shown above
-> 3. Replace the code blocks above with: `![Caption](assets/screenshots/filename.png)`
-
-</details>
+The **Analytics Dashboard** provides aggregate intelligence over the detection history. It features: a real/fake verdict donut chart, a detection volume trend line chart, a confidence score distribution histogram, top-10 detection sessions by volume, and a session summary KPI row. All charts are built with Plotly for smooth interactivity and hover tooltips.
 
 <p align="right"><a href="#-table-of-contents">↑ Back to Top</a></p>
 
 ---
 
-## 📊 Performance Metrics
+## Performance Metrics
 
-<details open>
-<summary><b>Click to expand</b></summary>
+> **Note:** Final production metrics will be populated after training on the full merged dataset (FaceForensics++ + Celeb-DF + DFDC). Values below reflect the evaluation pipeline design; results marked  will be updated after full training runs.
 
-> [!NOTE]
-> Performance metrics below reflect results from the model evaluation pipeline. Final production metrics depend on the training dataset, augmentation strategy, and hardware used. Values marked with ⏳ will be updated after full production training.
+### Evaluation Results
 
-### Model Performance
-
-<div align="center">
-
-| Metric | Value | Notes |
-|--------|-------|-------|
-| **Accuracy** | ⏳ To be updated after production training | Overall correct classifications |
-| **Precision** | ⏳ To be updated after production training | TP / (TP + FP) |
-| **Recall** | ⏳ To be updated after production training | TP / (TP + FN) |
-| **F1 Score** | ⏳ To be updated after production training | Harmonic mean of Precision & Recall |
-| **ROC-AUC** | ⏳ To be updated after production training | Area under ROC curve |
-| **Confusion Matrix** | ⏳ To be updated after production training | TP / FP / TN / FN breakdown |
-
-</div>
+| Metric | Value | Description |
+|--------|-------|-------------|
+| **Accuracy** | ⏳ To be updated | Overall proportion of correct classifications |
+| **Precision** | ⏳ To be updated | TP / (TP + FP) — Fake detection reliability |
+| **Recall** | ⏳ To be updated | TP / (TP + FN) — Fake detection coverage |
+| **F1 Score** | ⏳ To be updated | Harmonic mean of Precision and Recall |
+| **ROC-AUC** | ⏳ To be updated | Area under the ROC curve |
+| **Confusion Matrix** | ⏳ To be updated | TP / FP / TN / FN breakdown |
 
 ### Evaluation Methodology
 
 ```
 Dataset Split:      Train 70% / Validation 15% / Test 15%
-Evaluation Data:    Held-out test set (never seen during training)
-Threshold:          0.5 (configurable in Settings)
-Metrics Computed:   Accuracy, Precision, Recall, F1, AUC, ROC Curve
+Evaluation Set:     Held-out test set — never seen during training or tuning
+Confidence Threshold:  0.5 (configurable via Settings)
+Metrics Computed:   Accuracy, Precision, Recall, F1, AUC, ROC Curve, Confusion Matrix
 ```
 
-### Performance Visualization
-
-<div align="center">
-<img src="assets/diagrams/metrics_pipeline.png" alt="Model Evaluation Pipeline" width="90%"/>
-<br/><em>Model Evaluation Pipeline — Confusion Matrix · ROC Curve · AUC Score</em>
-</div>
-
-<!-- METRICS SCREENSHOT PLACEHOLDER -->
-<!-- After production training, insert: -->
-<!-- - ROC Curve plot (assets/screenshots/roc_curve.png) -->
-<!-- - Confusion Matrix (assets/screenshots/confusion_matrix.png) -->
-<!-- - Training/Validation loss curves (assets/screenshots/training_curves.png) -->
-
-</details>
+<p align="center">
+  <img src="assets/workflows/metrics_pipeline.png" width="900" alt="Evaluation Pipeline"/>
+</p>
 
 <p align="right"><a href="#-table-of-contents">↑ Back to Top</a></p>
 
 ---
 
-## 🔮 Future Enhancements
-
-<details>
-<summary><b>Click to expand</b></summary>
+## Future Enhancements
 
 | Priority | Enhancement | Description |
 |----------|------------|-------------|
 | 🔴 High | **Cloud Deployment** | Deploy on AWS / GCP / Azure with auto-scaling and load balancing |
-| 🔴 High | **REST API** | FastAPI/Flask wrapper exposing `/detect/image`, `/detect/video` endpoints |
-| 🟡 Medium | **Mobile Application** | React Native app with on-device TFLite inference |
-| 🟡 Medium | **Multi-Face Detection** | Simultaneous detection of multiple faces in a single frame |
-| 🟡 Medium | **ONNX Export** | Export to ONNX for cross-platform, framework-agnostic inference |
-| 🟡 Medium | **GPU Optimization** | CUDA-optimized inference with TensorRT and mixed-precision (FP16) |
-| 🟢 Low | **Improved Training Data** | Expand training with DFDC, WildDeepfake, and FaceShifter datasets |
+| 🔴 High | **REST API** | FastAPI wrapper exposing `/detect/image` and `/detect/video` endpoints |
+| 🟡 Medium | **Mobile Application** | React Native app with on-device TFLite inference for iOS/Android |
+| 🟡 Medium | **Multi-Face Detection** | Simultaneous analysis of all faces within a single frame |
+| 🟡 Medium | **ONNX Export** | Framework-agnostic inference for cross-platform deployment |
+| 🟡 Medium | **GPU Optimization** | TensorRT and FP16 mixed-precision for real-time inference |
 | 🟢 Low | **Audio DeepFake Detection** | Extend pipeline to detect AI-synthesized voice cloning |
 | 🟢 Low | **Real-time Stream Analysis** | RTSP/HLS stream ingestion for broadcast media monitoring |
-| 🟢 Low | **Transformer Architecture** | Experiment with ViT, CLIP, and hybrid CNN-Transformer models |
+| 🟢 Low | **Transformer Architecture** | Evaluate ViT, CLIP, and hybrid CNN-Transformer models |
 | 🟢 Low | **Browser Extension** | Chrome/Firefox extension for on-the-fly web media verification |
-
-</details>
+| 🟢 Low | **Federated Learning** | Privacy-preserving training without centralizing sensitive media |
 
 <p align="right"><a href="#-table-of-contents">↑ Back to Top</a></p>
 
 ---
 
-## 📄 License
+## License
 
-This project is licensed under the **MIT License** — you are free to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of this software.
+This project is licensed under the **MIT License**.
 
 ```
-MIT License
-
-Copyright (c) 2026 [Your Name]
+MIT License  ©  2026  [Your Name]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -835,29 +675,26 @@ See the full [LICENSE](LICENSE) file for details.
 
 ---
 
-## 👤 Author
+## Author
 
 <div align="center">
 
-### Built with ❤️ by
+### Built with ❤️ by 
 
 <br/>
 
-<!-- Replace the placeholders below with your actual information -->
+| Field | Info |
+|-------|------|
+| **Name** | `[Hemendra Sharma]` |
+| **Degree** | B.Tech — `[CSE]`, `[AKTU University, Lucknow]` |
+| **Batch** | `[2023-2027]` |
+| **GitHub** | [github.com/your-username](https://github.com/hemendra-opensource) |
+| **LinkedIn** | [linkedin.com/in/your-profile](https://www.linkedin.com/in/hemendra-sharma60/) |
 
-| | |
-|-|-|
-| **Name** | `[Your Full Name]` |
-| **Degree** | B.Tech — `[Your Branch]`, `[Your College/University]` |
-| **Batch** | `[Year of Graduation]` |
-| 🐙 **GitHub** | [github.com/your-username](https://github.com/your-username) |
-| 💼 **LinkedIn** | [linkedin.com/in/your-profile](https://linkedin.com/in/your-profile) |
-| 📧 **Email** | `your.email@example.com` |
-| 🌐 **Portfolio** | `your-portfolio-website.com` *(optional)* |
 
 <br/>
 
-> *This project was developed as a Final Year B.Tech capstone project in the domain of Computer Vision and Explainable AI.*
+*Developed as a Final Year B.Tech capstone project in Computer Vision and Explainable AI — 2026*
 
 </div>
 
@@ -865,37 +702,35 @@ See the full [LICENSE](LICENSE) file for details.
 
 ---
 
-## 🙏 Acknowledgements
-
-This project builds upon the outstanding work of the following organizations, research teams, and open-source communities:
+## Acknowledgements
 
 | Resource | Contribution |
 |----------|-------------|
-| 🔶 **TensorFlow / Google Brain** | Deep learning framework and pre-trained XceptionNet weights |
-| 👁️ **OpenCV** | Computer vision primitives, video I/O, and webcam capture |
-| 🌊 **Streamlit** | Rapid interactive web dashboard development |
-| 🎯 **MediaPipe (Google)** | Real-time face detection and landmark localization |
-| 📊 **Plotly** | Interactive charting and visualization components |
-| 📑 **ReportLab** | Professional PDF generation engine |
-| 🔬 **FaceForensics++ (TU Munich)** | Benchmark dataset and evaluation protocol |
-| ⭐ **Celeb-DF (Stevens Institute)** | High-quality DeepFake evaluation dataset |
-| 🏆 **DFDC (Meta AI)** | Large-scale diverse DeepFake detection challenge dataset |
-| 🧬 **François Chollet** | Original Xception architecture paper and Keras framework |
-| 📖 **Grad-CAM Authors** (Selvaraju et al.) | *"Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization"*, ICCV 2017 |
-| 🤗 **Open-Source Community** | NumPy, Pandas, Scikit-learn, Albumentations, and all dependent libraries |
+| **TensorFlow / Google Brain** | Deep learning framework and pretrained XceptionNet weights |
+| **OpenCV** | Computer vision primitives, video I/O, and webcam capture |
+| **Streamlit** | Rapid interactive web dashboard development |
+| **MediaPipe (Google)** | Real-time face detection and facial landmark localization |
+| **Plotly** | Interactive charting and visualization components |
+| **ReportLab** | Professional PDF generation engine |
+| **FaceForensics++ (TU Munich)** | Benchmark dataset and evaluation protocol |
+| **Celeb-DF (Stevens Institute)** | High-quality DeepFake evaluation dataset |
+| **DFDC (Meta AI)** | Large-scale diverse DeepFake detection challenge dataset |
+| **François Chollet** | Original Xception architecture paper and Keras framework |
+| **Selvaraju et al.** | *"Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization"*, ICCV 2017 |
+| **Open-Source Community** | NumPy, Pandas, Scikit-learn, Albumentations, and all dependent libraries |
 
 ---
 
 <div align="center">
 
-**⭐ If this project was helpful, please consider starring the repository!**
+** If this project helped you, please consider starring the repository!**
 
 [![GitHub Stars](https://img.shields.io/github/stars/your-username/deepfake-detection?style=social)](https://github.com/your-username/deepfake-detection)
 [![GitHub Forks](https://img.shields.io/github/forks/your-username/deepfake-detection?style=social)](https://github.com/your-username/deepfake-detection/fork)
 
 <br/>
 
-*Made with 🧠 + ☕ | Final Year B.Tech Project | 2026*
+*Made with 🧠 + ☕ · Final Year B.Tech Project · 2026*
 
 </div>
 
