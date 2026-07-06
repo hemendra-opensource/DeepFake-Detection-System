@@ -1,6 +1,6 @@
 <div align="center">
 
-# Explainable DeepFake Detection
+# DeepFake Detection System
 ### Using XceptionNet · Grad-CAM · Frame-wise Video Analysis
 
 *A production-grade AI system for detecting manipulated media with visual explainability*
