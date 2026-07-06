@@ -133,6 +133,15 @@ def load_model_and_detectors():
                 break
             except Exception as exc:
                 logger.warning("Failed to load %s: %s", candidate, exc)
+            # except Exception as exc:
+            #      print("=" * 80)
+            #      print("MODEL LOAD ERROR")
+            #      print(candidate)
+            #      print(exc)
+            #      import traceback
+            #      traceback.print_exc()
+            #      print("=" * 80)
+            #      logger.warning("Failed to load %s: %s", candidate, exc)
 
     # ── Demo stub (no weights found) ──────────────────────────────────────────
     if model is None:
